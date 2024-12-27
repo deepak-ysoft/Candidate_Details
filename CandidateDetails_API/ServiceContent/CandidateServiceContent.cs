@@ -93,5 +93,10 @@ namespace CandidateDetails_API.ServiceContent
             return true;
         }
 
+        public async Task<List<Candidate>> GetCandidates()
+        {
+            var candidates = await _context.candidateDetails.ToListAsync();
+            return candidates;
+        }
     }
 }

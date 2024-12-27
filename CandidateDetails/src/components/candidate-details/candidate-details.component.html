@@ -8,9 +8,10 @@
   </div>
    -->
    <div class="candidate-list">
-    <table >
+    <table id = "candidateDetailsTable">
       <thead>
         <tr>
+          <th>Date</th>
           <th>Name</th>
           <th>Contact No</th>
           <th>LinkedIn</th>
@@ -33,20 +34,20 @@
         <tr *ngFor="let candidate of candidates">
           <td>{{ candidate.date | date }}</td>
           <td>{{ candidate.name }}</td>
-          <td>{{ candidate.contactNo }}</td>
-          <td><a [href]="candidate.linkedinProfile" target="_blank">Profile</a></td>
+          <td>{{ candidate.contact_No }}</td>
+          <td><a [href]="candidate.linkedin_Profile" target="_blank">Profile</a></td>
           <td>{{ candidate.emailId }}</td>
           <td>{{ candidate.roles }}</td>
           <td>{{ candidate.experience }}</td>
           <td>{{ candidate.skills }}</td>
           <td>{{ candidate.ctc }}</td>
           <td>{{ candidate.etc }}</td>
-          <td>{{ candidate.noticePeriod }}</td>
-          <td>{{ candidate.currentLocation }}</td>
-          <td>{{ candidate.preferLocation }}</td>
-          <td>{{ candidate.reasonForJobChange }}</td>
-          <td>{{ candidate.scheduleInterview | date }}</td>
-          <td>{{ candidate.scheduleInterviewStatus }}</td>
+          <td>{{ candidate.notice_Period }}</td>
+          <td>{{ candidate.current_Location }}</td>
+          <td>{{ candidate.prefer_Location }}</td>
+          <td>{{ candidate.reason_For_Job_Change }}</td>
+          <td>{{ candidate.schedule_Interview | date }}</td>
+          <td>{{ candidate.schedule_Interview_status }}</td>
           <td>{{ candidate.comments }}</td>
         </tr>
       </tbody>

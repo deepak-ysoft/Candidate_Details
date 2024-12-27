@@ -7,7 +7,7 @@ import { Candidate } from '../class/candidate-model';
 })
 export class CandidateDetailsService {
 
-  apiGetCandidates:string = 'http://localhost:3000/candidates';
+  apiGetCandidates:string = `https://localhost:7115/api/Candidate/GetCandidates`;
   constructor(private http: HttpClient) { }
 
  

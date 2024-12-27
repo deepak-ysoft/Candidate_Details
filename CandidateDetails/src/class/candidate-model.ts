@@ -2,19 +2,19 @@ export class Candidate {
     id: number=0;
     date: Date=new Date();
     name: string = '';
-    contactNo: string = '';
-    linkedinProfile: string = '';
+    contact_No: string = '';
+    linkedin_Profile: string = '';
     emailId: string = '';
     roles: string = '';
     experience: string = '';
     skills: string = '';
     ctc: number = 0;
     etc: number = 0;
-    noticePeriod: string = '';
-    currentLocation: string = '';
-    preferLocation: string = '';
-    reasonForJobChange: string = '';
-    scheduleInterview: Date = new Date();
-    scheduleInterviewStatus: string = '';
+    notice_Period: string = '';
+    current_Location: string = '';
+    prefer_Location: string = '';
+    reason_For_Job_Change: string = '';
+    schedule_Interview: Date = new Date();
+    schedule_Interview_status: string = '';
     comments: string = '';
 }

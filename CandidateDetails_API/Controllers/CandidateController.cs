@@ -44,29 +44,12 @@ namespace CandidateDetails_API.Controllers
         }
 
         [HttpGet("GetCandidates")]
-        public async Task<IActionResult> GetCandidates(int page = 1, int pageSize = 10, string searchTerm = "", string sortColumn = "Name", string sortDirection = "asc")
+        public async Task<IActionResult> GetCandidates()
         {
             try
             {
-                // Define SQL parameters for the stored procedure
-                var parameters = new[]
-                {
-            new SqlParameter("@Page", SqlDbType.Int) { Value = page },
-            new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-            new SqlParameter("@SearchTerm", SqlDbType.NVarChar, 255) { Value = (object)searchTerm ?? DBNull.Value },
-            new SqlParameter("@SortColumn", SqlDbType.NVarChar, 50) { Value = sortColumn },
-            new SqlParameter("@SortDirection", SqlDbType.NVarChar, 4) { Value = sortDirection }
-        };
-
-                // Call the stored procedure using FromSqlRaw
-                var candidates = await _context.candidateDetails
-                    .FromSqlRaw("EXEC GetCandidatesWithPaging @Page, @PageSize, @SearchTerm, @SortColumn, @SortDirection", parameters)
-                    .ToListAsync();
-
-                // To get the total count, you might want to use another query or return it within the SP as well
-                var totalCount = await _context.candidateDetails.CountAsync(); // Or get this from the SP
-
-                return Ok(new { data = candidates, totalCount = totalCount });
+             var candidate = await _service.GetCandidates();
+                return Ok(candidate);
             }
             catch (Exception ex)
             {
