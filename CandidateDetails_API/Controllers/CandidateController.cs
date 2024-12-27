@@ -44,19 +44,19 @@ namespace CandidateDetails_API.Controllers
         }
 
         [HttpGet("GetCandidates")]
-        public async Task<IActionResult> GetCandidates(int page = 1, int pageSize = 10, string searchTerm = "", string sortColumn = "Name", string sortDirection = "asc")
+        public async Task<IActionResult> GetCandidates(int page = 1, int pageSize = 10, string searchTerm = "", string sortColumn = "id", string sortDirection = "asc")
         {
             try
             {
                 // Define SQL parameters for the stored procedure
                 var parameters = new[]
                 {
-            new SqlParameter("@Page", SqlDbType.Int) { Value = page },
-            new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-            new SqlParameter("@SearchTerm", SqlDbType.NVarChar, 255) { Value = (object)searchTerm ?? DBNull.Value },
-            new SqlParameter("@SortColumn", SqlDbType.NVarChar, 50) { Value = sortColumn },
-            new SqlParameter("@SortDirection", SqlDbType.NVarChar, 4) { Value = sortDirection }
-        };
+                    new SqlParameter("@Page", SqlDbType.Int) { Value = page },
+                    new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
+                    new SqlParameter("@SearchTerm", SqlDbType.NVarChar, 255) { Value = (object)searchTerm ?? DBNull.Value },
+                    new SqlParameter("@SortColumn", SqlDbType.NVarChar, 50) { Value = sortColumn },
+                    new SqlParameter("@SortDirection", SqlDbType.NVarChar, 4) { Value = sortDirection }
+                };
 
                 // Call the stored procedure using FromSqlRaw
                 var candidates = await _context.candidateDetails
