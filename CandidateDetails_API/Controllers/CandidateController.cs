@@ -1,9 +1,9 @@
 ﻿using CandidateDetails_API.IServices;
 using CandidateDetails_API.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Data;
 
 namespace CandidateDetails_API.Controllers
 {
@@ -44,33 +44,37 @@ namespace CandidateDetails_API.Controllers
         }
 
         [HttpGet("GetCandidates")]
-        public async Task<IActionResult> GetCandidates(int page = 1, int pageSize = 10, string searchTerm = "")
+        public async Task<IActionResult> GetCandidates(int page = 1, int pageSize = 10, string searchTerm = "", string sortColumn = "Name", string sortDirection = "asc")
         {
             try
             {
-                var query = _context.candidateDetails.AsQueryable(); // Make it Queryable
-
-                if (!string.IsNullOrEmpty(searchTerm)) // If user want to search something
+                // Define SQL parameters for the stored procedure
+                var parameters = new[]
                 {
-                    query = query.Where(c => c.Name.Contains(searchTerm) ||
-                                             c.Email_ID.Contains(searchTerm) ||
-                                             (c.id).ToString().Contains(searchTerm));
-                }
+            new SqlParameter("@Page", SqlDbType.Int) { Value = page },
+            new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
+            new SqlParameter("@SearchTerm", SqlDbType.NVarChar, 255) { Value = (object)searchTerm ?? DBNull.Value },
+            new SqlParameter("@SortColumn", SqlDbType.NVarChar, 50) { Value = sortColumn },
+            new SqlParameter("@SortDirection", SqlDbType.NVarChar, 4) { Value = sortDirection }
+        };
 
-                var totalCount = await query.CountAsync(); // Count pages for example if 1000 customer in list then according pageSize=10 here totalCount of page is 100
+                // Call the stored procedure using FromSqlRaw
+                var candidates = await _context.candidateDetails
+                    .FromSqlRaw("EXEC GetCandidatesWithPaging @Page, @PageSize, @SearchTerm, @SortColumn, @SortDirection", parameters)
+                    .ToListAsync();
 
-                var customers = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                    .ToListAsync(); // When user click on another page 
+                // To get the total count, you might want to use another query or return it within the SP as well
+                var totalCount = await _context.candidateDetails.CountAsync(); // Or get this from the SP
 
-                return Ok(new { data = customers, totalCount = totalCount });
+                return Ok(new { data = candidates, totalCount = totalCount });
             }
             catch (Exception ex)
             {
-                throw ex;
+                // Log the error (Optional)
+                return StatusCode(500, "Internal server error");
             }
         }
+
 
         [HttpPost("AddCandidate")]
         public async Task<IActionResult> AddCandidate(Candidate candidate)
