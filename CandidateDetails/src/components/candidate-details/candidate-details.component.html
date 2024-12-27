@@ -1,0 +1,55 @@
+<!-- <div class="candidate-list">
+    <h2>Candidate Details</h2>
+    <ul>
+      <li *ngFor="let field of fields">
+        <strong>{{ field.label }}:</strong> {{ candidate[field.key] }}
+      </li>
+    </ul>
+  </div>
+   -->
+   <div class="candidate-list">
+    <table >
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Contact No</th>
+          <th>LinkedIn</th>
+          <th>Email</th>
+          <th>Roles</th>
+          <th>Experience</th>
+          <th>Skills</th>
+          <th>CTC</th>
+          <th>ETC</th>
+          <th>Notice Period</th>
+          <th>Current Location</th>
+          <th>Preferred Location</th>
+          <th>Reason for Job Change</th>
+          <th>Interview Date</th>
+          <th>Interview Status</th>
+          <th>Comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let candidate of candidates">
+          <td>{{ candidate.date | date }}</td>
+          <td>{{ candidate.name }}</td>
+          <td>{{ candidate.contactNo }}</td>
+          <td><a [href]="candidate.linkedinProfile" target="_blank">Profile</a></td>
+          <td>{{ candidate.emailId }}</td>
+          <td>{{ candidate.roles }}</td>
+          <td>{{ candidate.experience }}</td>
+          <td>{{ candidate.skills }}</td>
+          <td>{{ candidate.ctc }}</td>
+          <td>{{ candidate.etc }}</td>
+          <td>{{ candidate.noticePeriod }}</td>
+          <td>{{ candidate.currentLocation }}</td>
+          <td>{{ candidate.preferLocation }}</td>
+          <td>{{ candidate.reasonForJobChange }}</td>
+          <td>{{ candidate.scheduleInterview | date }}</td>
+          <td>{{ candidate.scheduleInterviewStatus }}</td>
+          <td>{{ candidate.comments }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
