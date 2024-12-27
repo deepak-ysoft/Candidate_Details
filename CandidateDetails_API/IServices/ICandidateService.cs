@@ -6,5 +6,6 @@ namespace CandidateDetails_API.IServices
     {
         public Task<bool> AddCandidates(Stream fileStream);
         public Task<bool> AddCandidate(Candidate candidate);
+        public Task<List<Candidate>> GetCandidates();
     }
 }
