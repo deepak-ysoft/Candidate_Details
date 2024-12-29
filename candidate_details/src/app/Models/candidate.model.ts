@@ -4,7 +4,7 @@ export class Candidate {
   name: string = '';
   contact_No: string = '';
   linkedin_Profile: string = '';
-  emailId: string = '';
+  email_ID: string = '';
   roles: string = '';
   experience: string = '';
   skills: string = '';

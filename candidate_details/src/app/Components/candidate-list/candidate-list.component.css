@@ -1,0 +1,17 @@
+.card {
+  border-radius: 10px;
+}
+
+.bg-primary {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.list-group-item {
+  border: none;
+  padding: 0.5rem 0;
+}
+
+.card-footer {
+  background-color: #f8f9fa;
+}

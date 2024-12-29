@@ -107,5 +107,37 @@ namespace CandidateDetails_API.Controllers
                 throw ex;
             }
         }
+        [HttpPost("UploadCV")]
+        public async Task<IActionResult> UploadCV([FromForm] IFormFile cv, [FromForm] int candidateId)
+        {
+            if (cv == null || cv.Length == 0)
+                return BadRequest("No file uploaded.");
+
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedCVs");
+            Directory.CreateDirectory(uploadsFolder);
+
+            var filePath = Path.Combine(uploadsFolder, $"Candidate_{candidateId}_CV{Path.GetExtension(cv.FileName)}");
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await cv.CopyToAsync(stream);
+            }
+
+            // Save file path to the database if needed
+            return Ok("CV uploaded successfully.");
+        }
+
+        [HttpGet("DownloadCV/{candidateId}")]
+        public IActionResult DownloadCV(int candidateId)
+        {
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedCVs");
+            var filePath = Directory.GetFiles(uploadsFolder, $"Candidate_{candidateId}_CV*").FirstOrDefault();
+
+            if (string.IsNullOrEmpty(filePath))
+                return NotFound("CV not found for the candidate.");
+
+            var fileName = Path.GetFileName(filePath);
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(fileStream, "application/pdf", fileName); // Change MIME type if needed
+        }
     }
 }
