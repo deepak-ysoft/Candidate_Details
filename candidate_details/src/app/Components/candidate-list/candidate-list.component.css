@@ -15,3 +15,37 @@
 .card-footer {
   background-color: #f8f9fa;
 }
+th span {
+  cursor: pointer;
+}
+.cursorPointer {
+  cursor: pointer !important;
+}
+
+.uploadDiv {
+  position: relative;
+  overflow: hidden;
+}
+.uploadinput {
+  position: absolute;
+  font-size: 50px;
+  opacity: 0;
+  right: 0;
+  top: 0;
+}
+
+.ellipsis-cell {
+  width: 100px;
+  max-width: 350px;
+  height: 50px;
+  overflow: hidden; /* Hides content that overflows */
+  text-overflow: ellipsis; /* Adds ellipsis for overflow */
+  white-space: nowrap; /* Prevents wrapping to the next line */
+  /* display: inline-block; Keeps the element inline */
+}
+/* Global style */
+::ng-deep .custom-tooltip {
+  background-color: #ff5733 !important; /* Custom background */
+  color: white !important; /* Custom text color */
+  font-size: 14px !important; /* Optional: Font size */
+}

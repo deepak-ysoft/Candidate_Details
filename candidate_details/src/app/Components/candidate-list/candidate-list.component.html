@@ -1,72 +1,519 @@
-<a href="https://www.ysoftsolution.com/">
-  <img
-    width="100"
-    height="50"
-    src="https://www.ysoftsolution.com/wp-content/uploads/2024/02/final-logo-1024x505.png"
-    class="attachment-large size-large wp-image-125"
-    alt=""
-    decoding="async"
-    srcset="
-      https://www.ysoftsolution.com/wp-content/uploads/2024/02/final-logo-1024x505.png 1024w,
-      https://www.ysoftsolution.com/wp-content/uploads/2024/02/final-logo-300x148.png   300w,
-      https://www.ysoftsolution.com/wp-content/uploads/2024/02/final-logo-768x379.png   768w,
-      https://www.ysoftsolution.com/wp-content/uploads/2024/02/final-logo.png          1366w
-    "
-    sizes="(max-width: 800px) 100vw, 800px"
-  /> </a
-><!-- Add this in your component HTML file -->
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img
+        src="https://www.ysoftsolution.com/wp-content/uploads/2024/02/final-logo-1024x505.png"
+        alt=""
+        width="100"
+        height="50"
+        class="d-inline-block align-text-top"
+      />
+    </a>
+  </div>
+</nav>
+
+<!-- Add this in your component HTML file -->
 <div class="container-fluid mt-4">
-  <h2>Candidate Details</h2>
+  <div class="row mb-1">
+    <div class="col-4 d-flex justify-content-start">
+      <div
+        class="btn btn-success align-iten-center h-75 pt-1 w-25 me-3 uploadDiv"
+      >
+        Upload Excel
+        <input
+          type="file"
+          accept=".xlsx, .xls"
+          (change)="onUploadExcelFileChange($event)"
+          class="uploadinput"
+        />
+      </div>
+      <div
+        class="btn btn-primary align-iten-center h-75 pt-1 w-25"
+        (click)="openAccCandidateModel()"
+      >
+        Add Candidate
+      </div>
+    </div>
+    <div class="col-4 d-flex justify-content-center">
+      <h2>Candidates</h2>
+    </div>
+    <div class="col-4 d-flex justify-content-end">
+      <select
+        [(ngModel)]="SearchField"
+        (change)="onSearchFieldChange($event)"
+        class="form-select h-100 me-2 w-25"
+      >
+        <option value="">Select field...</option>
+        <option value="Name">Name</option>
+        <option value="Contact_No">Contact No</option>
+        <option value="Linkedin_Profile">LinkedIn Profile</option>
+        <option value="Email_ID">Email</option>
+        <option value="Experience">Experience</option>
+        <option value="Skills">Skills</option>
+        <option value="CTC">CTC</option>
+        <option value="ETC">ETC</option>
+        <option value="Schedule_Interview_status">Interview Status</option>
+      </select>
+      <input
+        type="text"
+        placeholder="Search..."
+        class="form-control rounded-pill w-75"
+        id="searchTerm"
+        [(ngModel)]="searchTerms"
+        (input)="clickToSearchCandidate()"
+      />
+    </div>
+  </div>
   <table class="table table-bordered table-striped">
     <thead class="thead-dark">
       <tr>
-        <th>Date</th>
-        <th>Name</th>
-        <th>Contact No</th>
-        <th>LinkedIn Profile</th>
-        <th>Roles</th>
-        <th>Experience</th>
-        <th>Skills</th>
-        <th>CTC</th>
-        <th>ETC</th>
-        <th>Schedule Interview</th>
-        <th>Interview Status</th>
+        <th style="height: 50px">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'Date',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            Date
+          </span>
+        </th>
+        <th style="height: 50px">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'Name',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            Name
+          </span>
+        </th>
+        <th style="height: 50px">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'Contact_No',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            Contact No
+          </span>
+        </th>
+        <th style="height: 50px">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'LinkedIn_Profile',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            LinkedIn Profile
+          </span>
+        </th>
+        <th style="height: 50px">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'Email_ID',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            Email
+          </span>
+        </th>
+        <th style="height: 50px">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'Roles',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            Roles
+          </span>
+        </th>
+        <th style="height: 50px">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'Experience',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            Experience
+          </span>
+        </th>
+        <th style="height: 50px">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'Skills',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            Skills
+          </span>
+        </th>
+        <th style="height: 50px">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'CTC',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            CTC
+          </span>
+        </th>
+        <th style="height: 50px">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'ETC',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            ETC
+          </span>
+        </th>
+        <th class="ellipsis-cell">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+
+                'Schedule_Interview',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            Schedule Interview
+          </span>
+        </th>
+        <th class="ellipsis-cell">
+          <span
+            (click)="
+              clickToSortCandidate(
+                PageNumber,
+                pageSize,
+                'Schedule_Interview_status',
+                sortDirection,
+                searchTerm,
+                SearchField
+              )
+            "
+          >
+            Interview Status
+          </span>
+        </th>
+        <th style="height: 50px">cv</th>
+        <th style="height: 50px">Actions</th>
       </tr>
     </thead>
     <tbody *ngFor="let candidate of candidateList">
-      <tr>
-        <td>{{ candidate.date | date : "shortDate" }}</td>
-        <td>{{ candidate.name }}</td>
-        <td>{{ candidate.contact_No }}</td>
-        <td>
-          <a [href]="candidate.linkedin_Profile" target="_blank">{{
-            candidate.linkedin_Profile
-          }}</a>
+      <tr *ngIf="candidateList && candidateList != null">
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.date.toString()"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.date | date : "shortDate" }}
         </td>
-        <td>{{ candidate.roles }}</td>
-        <td>{{ candidate.experience }}</td>
-        <td>{{ candidate.skills }}</td>
-        <td>{{ candidate.ctc }}</td>
-        <td>{{ candidate.etc }}</td>
-        <td>{{ candidate.schedule_Interview | date : "short" }}</td>
-        <td>{{ candidate.schedule_Interview_status }}</td>
-         <td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.name"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.name }}
+        </td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.contact_No"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.contact_No }}
+        </td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.linkedin_Profile"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.linkedin_Profile }}
+        </td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.email_ID"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.email_ID }}
+        </td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.roles"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.roles }}
+        </td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.experience"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.experience }}
+        </td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.skills"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.skills }}
+        </td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.ctc.toString()"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.ctc }}
+        </td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.etc.toString()"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.etc }}
+        </td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.schedule_Interview.toString()"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.schedule_Interview | date : "short" }}
+        </td>
+        <td
+          class="ellipsis-cell"
+          [matTooltip]="candidate.schedule_Interview_status"
+          matTooltipPosition="above"
+          matTooltipClass="custom-tooltip"
+        >
+          {{ candidate.schedule_Interview_status }}
+        </td>
+        <td>
           <!-- Upload CV -->
           <!-- <input type="file" (change)="onCVUpload($event)" class="form-control mb-2" /> -->
           <!-- Download CV -->
-          <button 
-            class="btn btn-success" 
-            [disabled]="!isCVAvailable" 
-            (click)="downloadCV(candidate.id)">
-            Download CV
+          <button
+            class="text-success cursorPointer rounded-pill border-primary"
+            [disabled]="!candidate.cvPath"
+            [ngClass]="{
+              'text-success border-primary': candidate.cvPath,
+              'text-secondary border-secondary': !candidate.cvPath
+            }"
+            (click)="downloadCV(candidate.id, candidate.name)"
+          >
+            <i class="fa-solid fa-download"></i>
+            cv
           </button>
         </td>
         <td>
-            <i class="fas fa-edit text-primary me-2"></i>
-            <i class="fa fa-info-circle text-info me-2"></i>
-          <i class="fa fa-trash text-danger"></i>
+          <i
+            class="fas fa-edit text-primary me-2 cursorPointer"
+            (click)="EditCandidate(candidate)"
+          ></i>
+          <i
+            class="fa fa-info-circle text-info me-2 cursorPointer"
+            (click)="ShowCandidateDetails(candidate)"
+          ></i>
+          <i
+            class="fa fa-trash text-danger cursorPointer"
+            (click)="deleteCandidate(candidate.id)"
+          ></i>
         </td>
       </tr>
     </tbody>
   </table>
+  <span
+    >Showing {{ firstCandidateOfPage }} to {{ lastCandidateOfPage }} of
+    {{ totalcandidates }} candidates.</span
+  >
 </div>
+<!-- Pagination Controls -->
+<nav
+  class="float-end me-4"
+  aria-label="Page navigation example"
+  *ngIf="totalpages > 1"
+>
+  <ul class="pagination">
+    <li class="page-item cursorPointer" [class.disabled]="currentPage === 1">
+      <a class="page-link" (click)="loadPage(currentPage - 1)">Previous</a>
+    </li>
+    <li
+      *ngFor="let page of getDisplayedPages()"
+      class="page-item cursorPointer"
+      [class.active]="page === currentPage"
+      [class.disabled]="page === '...'"
+    >
+      <a
+        *ngIf="page !== '...'; else ellipsis"
+        class="page-link cursor-pointer"
+        (click)="loadPage(page)"
+        >{{ page }}</a
+      >
+      <ng-template #ellipsis>
+        <span class="page-link">...</span>
+      </ng-template>
+    </li>
+    <li
+      class="page-item cursorPointer"
+      [class.disabled]="currentPage === totalpages"
+    >
+      <a class="page-link cursor-pointer" (click)="loadPage(currentPage + 1)"
+        >Next</a
+      >
+    </li>
+  </ul>
+</nav>
+
+<nav class="float-end me-4">
+  <select
+    [(ngModel)]="pageSize"
+    (change)="onPageSizeChange($event)"
+    class="form-select"
+  >
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+</nav>
+
+<span class="float-end me-2 mt-1">Select page size </span>
+
+<ng-template #addCandidate let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add Candidate</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-add-candidate
+      [candidateEdit]="clickedCandidateForEdit"
+      (isclick)="modal.close('Save click')"
+    />
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="modal.close('Save click')"
+    >
+      Ok
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #candidateDetails let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Candidate Details</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-candidate-details [candidateDetail]="clickedCandidateForDetails" />
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="modal.close('Save click')"
+    >
+      Ok
+    </button>
+  </div>
+</ng-template>

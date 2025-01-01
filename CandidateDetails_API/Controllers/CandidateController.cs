@@ -3,6 +3,7 @@ using CandidateDetails_API.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Buffers;
 using System.Data;
 
 namespace CandidateDetails_API.Controllers
@@ -35,7 +36,7 @@ namespace CandidateDetails_API.Controllers
 
                 var stream = file.OpenReadStream();
                 var Candidates = await _service.AddCandidates(stream);
-                return Ok(Candidates);
+                return Ok(new {success= Candidates });
             }
             catch (Exception ex)
             {
@@ -43,44 +44,37 @@ namespace CandidateDetails_API.Controllers
             }
         }
 
-        //[HttpGet("GetCandidates")]
-        //public async Task<IActionResult> GetCandidates()
-        //{
-        //    try
-        //    {
-        //     var candidate = await _service.GetCandidates();
-        //        return Ok(candidate);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log the error (Optional)
-        //        return StatusCode(500, "Internal server error");
-        //    }
-        //}
         [HttpGet("GetCandidates")]
-        public async Task<IActionResult> GetCandidates(int page = 1, int pageSize = 10, string searchTerm = "", string sortColumn = "id", string sortDirection = "asc")
+        public async Task<IActionResult> GetCandidates(int page = 1, int pageSize = 10, string sortColumn = "id", string sortDirection = "asc", string SearchField = "", string SearchValue = "")
         {
             try
             {
+                var totalRecordsParam = new SqlParameter("@TotalRecords", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+            
+
                 // Define SQL parameters for the stored procedure
                 var parameters = new[]
                 {
-                    new SqlParameter("@Page", SqlDbType.Int) { Value = page },
+                    new SqlParameter("@PageNumber", SqlDbType.Int) { Value = page },
                     new SqlParameter("@PageSize", SqlDbType.Int) { Value = pageSize },
-                    new SqlParameter("@SearchTerm", SqlDbType.NVarChar, 255) { Value = (object)searchTerm ?? DBNull.Value },
                     new SqlParameter("@SortColumn", SqlDbType.NVarChar, 50) { Value = sortColumn },
-                    new SqlParameter("@SortDirection", SqlDbType.NVarChar, 4) { Value = sortDirection }
+                    new SqlParameter("@SortOrder", SqlDbType.NVarChar, 4) { Value = sortDirection },
+                    new SqlParameter("@SearchField", SqlDbType.NVarChar, 255) { Value = (object)SearchField ?? DBNull.Value },
+                    new SqlParameter("@SearchValue", SqlDbType.NVarChar, 255) { Value = (object)SearchValue ?? DBNull.Value },
+                    totalRecordsParam
                 };
 
                 // Call the stored procedure using FromSqlRaw
                 var candidates = await _context.candidateDetails
-                    .FromSqlRaw("EXEC GetCandidatesWithPaging @Page, @PageSize, @SearchTerm, @SortColumn, @SortDirection", parameters)
+                    .FromSqlRaw("EXEC usp_GetAllcandidate @PageNumber, @PageSize, @SortColumn, @SortOrder,@SearchField,@SearchValue,@TotalRecords OUT", parameters)
                     .ToListAsync();
 
-                // To get the total count, you might want to use another query or return it within the SP as well
-                var totalCount = await _context.candidateDetails.CountAsync(); // Or get this from the SP
+                int totalRecords = (int)totalRecordsParam.Value;
 
-                return Ok(new { data = candidates, totalCount = totalCount });
+                return Ok(new { data = candidates,totalCount= totalRecords });
             }
             catch (Exception ex)
             {
@@ -89,17 +83,83 @@ namespace CandidateDetails_API.Controllers
             }
         }
 
+        [HttpPost("AddEditCandidate")]
+        public async Task<IActionResult> AddEditCandidate([FromForm] Candidate candidate)
+            {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                bool res = false;
 
-        [HttpPost("AddCandidate")]
-        public async Task<IActionResult> AddCandidate(Candidate candidate)
+                // Save the CV file
+                var CandidateCV = Path.Combine(Directory.GetCurrentDirectory(), "CandidateCV");
+                if (!Directory.Exists(CandidateCV))
+                {
+                    Directory.CreateDirectory(CandidateCV);
+                }
+                if (candidate.id == null)
+                    candidate.id = 0;
+                if (candidate.id == 0)
+                {
+                    string beforeAt = candidate.email_ID.Split('@')[0];
+                    // var uniqueFileName = $"{Guid.NewGuid()}_{candidate.cv.FileName}";
+                    string fileName = $"{candidate.name}_Email_{beforeAt}{Path.GetExtension(candidate.cv.FileName)}";
+                    var filePath = Path.Combine(CandidateCV, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await candidate.cv.CopyToAsync(stream);
+                    }
+
+                    // Save the file path in the database
+                    candidate.cvPath = $"https://localhost:44319/CandidateCV/{fileName}";
+                }
+                else
+                {
+                    var can = await _context.candidateDetails.FirstOrDefaultAsync(x => x.id == candidate.id);
+                    var previousCV = Path.GetFileName(can.cvPath);
+                    var filePath = Path.Combine(CandidateCV, previousCV);
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        // Delete the file asynchronously
+                        await Task.Run(() => System.IO.File.Delete(filePath));
+                    }
+                    string beforeAt = candidate.email_ID.Split('@')[0];
+                    // var uniqueFileName = $"{Guid.NewGuid()}_{candidate.cv.FileName}";
+                    string fileName = $"{candidate.name}_{candidate.id}_Email_{beforeAt}{Path.GetExtension(candidate.cv.FileName)}";
+                    var UpdatefilePath = Path.Combine(CandidateCV, fileName);
+
+                    using (var stream = new FileStream(UpdatefilePath, FileMode.Create))
+                    {
+                        await candidate.cv.CopyToAsync(stream);
+                    }
+
+                    // Save the file path in the database
+                    candidate.cvPath = $"https://localhost:44319/CandidateCV/{fileName}";
+                }
+                // Save candidate details
+                res = await _service.AddEditCandidate(candidate);
+
+
+                return Ok(new { success = res });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        [HttpDelete("DeleteCandidate/{id}")]
+        public async Task<IActionResult> DeleteCandidate(int id)
         {
             try
             {
-                if (candidate == null)
-                {
-                    return BadRequest("File not found");
-                }
-                bool res = await _service.AddCandidate(candidate);
+                bool res = await _service.deleteCanndidate(id);
                 return Ok(new { success = res });
             }
             catch (Exception ex)
@@ -107,37 +167,24 @@ namespace CandidateDetails_API.Controllers
                 throw ex;
             }
         }
-        [HttpPost("UploadCV")]
-        public async Task<IActionResult> UploadCV([FromForm] IFormFile cv, [FromForm] int candidateId)
-        {
-            if (cv == null || cv.Length == 0)
-                return BadRequest("No file uploaded.");
-
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedCVs");
-            Directory.CreateDirectory(uploadsFolder);
-
-            var filePath = Path.Combine(uploadsFolder, $"Candidate_{candidateId}_CV{Path.GetExtension(cv.FileName)}");
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await cv.CopyToAsync(stream);
-            }
-
-            // Save file path to the database if needed
-            return Ok("CV uploaded successfully.");
-        }
 
         [HttpGet("DownloadCV/{candidateId}")]
-        public IActionResult DownloadCV(int candidateId)
+        public async Task<IActionResult> DownloadCV(int candidateId)
         {
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedCVs");
-            var filePath = Directory.GetFiles(uploadsFolder, $"Candidate_{candidateId}_CV*").FirstOrDefault();
+            var candidate = await _context.candidateDetails.FirstOrDefaultAsync(x => x.id == candidateId);
+            string getFileName = Path.GetFileName(candidate.cvPath);
+            // Path where CV files are stored
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "CandidateCV", getFileName);
 
-            if (string.IsNullOrEmpty(filePath))
-                return NotFound("CV not found for the candidate.");
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("File not found.");
+            }
 
-            var fileName = Path.GetFileName(filePath);
-            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(fileStream, "application/pdf", fileName); // Change MIME type if needed
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            var fileName = $"{candidate.name}_CV.pdf";
+
+            return File(fileBytes, "application/pdf", fileName);
         }
     }
 }

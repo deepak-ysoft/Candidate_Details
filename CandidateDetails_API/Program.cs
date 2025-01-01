@@ -2,6 +2,7 @@ using CandidateDetails_API.IServices;
 using CandidateDetails_API.Model;
 using CandidateDetails_API.ServiceContent;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,12 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+    Path.Combine(builder.Environment.ContentRootPath, "CandidateCV")),
+    RequestPath = "/CandidateCV"
+});
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

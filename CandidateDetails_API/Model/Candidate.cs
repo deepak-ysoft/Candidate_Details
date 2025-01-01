@@ -1,24 +1,50 @@
-﻿namespace CandidateDetails_API.Model
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CandidateDetails_API.Model
 {
     public class Candidate
     {
+        [Key]
         public int id { get; set; }
-        public DateTime Date { get; set; }
-        public string Name { get; set; }
-        public string Contact_No { get; set; }
-        public string Linkedin_Profile { get; set; }
-        public string Email_ID { get; set; }
-        public string Roles { get; set; }
-        public string Experience { get; set; }
-        public string Skills { get; set; }
-        public decimal CTC { get; set; }
-        public decimal ETC { get; set; }
-        public string Notice_Period { get; set; }
-        public string Current_Location { get; set; }
-        public string Prefer_Location { get; set; }
-        public string Reason_For_Job_Change { get; set; }
-        public DateTime Schedule_Interview { get; set; }
-        public string Schedule_Interview_status { get; set; }
-        public string Comments { get; set; }
+        [Required]
+        public DateTime date { get; set; }
+        [Required]
+        public string name { get; set; }
+        [Required]
+        public string contact_No { get; set; }
+        [Required]
+        public string linkedin_Profile { get; set; }
+        [Required]
+        [RegularExpression("^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address.")]
+        public string email_ID { get; set; }
+        [Required]
+        public string roles { get; set; }
+        [Required]
+        public string experience { get; set; }
+        [Required]
+        public string skills { get; set; }
+        [Required]
+        public decimal ctc { get; set; }
+        [Required]
+        public decimal etc { get; set; }
+        [Required]
+        public string notice_Period { get; set; }
+        [Required]
+        public string current_Location { get; set; }
+        [Required]
+        public string prefer_Location { get; set; }
+        [Required]
+        public string reason_For_Job_Change { get; set; }
+        [Required]
+        public DateTime schedule_Interview { get; set; }
+        [Required]
+        public string schedule_Interview_status { get; set; }
+        [Required]
+        public string comments { get; set; }
+        [NotMapped]
+        public IFormFile cv { get; set; }
+        public string? cvPath { get; set; }
+        public bool? isDelete { get; set; }
     }
 }

@@ -17,4 +17,6 @@ export class Candidate {
   schedule_Interview: Date = new Date();
   schedule_Interview_status: string = '';
   comments: string = '';
+  cvPath: string = '';
+  cv?: File;
 }
