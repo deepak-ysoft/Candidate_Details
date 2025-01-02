@@ -33,9 +33,9 @@ namespace CandidateDetails_API.Controllers
                 {
                     return BadRequest("File not found");
                 }
-
+               // read a file which will be upload from a form.
                 var stream = file.OpenReadStream();
-                var Candidates = await _service.AddCandidates(stream);
+                var Candidates = await _service.AddCandidates(stream);// Call the service method to add candidates
                 return Ok(new {success= Candidates });
             }
             catch (Exception ex)
@@ -44,11 +44,15 @@ namespace CandidateDetails_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all candidates from database
+        /// </summary>
+        /// <returns>List of candidates and count of candidates</returns>
         [HttpGet("GetCandidates")]
         public async Task<IActionResult> GetCandidates(int page = 1, int pageSize = 10, string sortColumn = "id", string sortDirection = "asc", string SearchField = "", string SearchValue = "")
         {
             try
-            {
+            {   // Define the SQL output parameter
                 var totalRecordsParam = new SqlParameter("@TotalRecords", SqlDbType.Int)
                 {
                     Direction = ParameterDirection.Output
@@ -83,11 +87,16 @@ namespace CandidateDetails_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Add or Edit candidate details
+        /// </summary>
+        /// <param name="candidate">Candidate model object</param>
+        /// <returns>boolean</returns>
         [HttpPost("AddEditCandidate")]
         public async Task<IActionResult> AddEditCandidate([FromForm] Candidate candidate)
             {
             try
-            {
+            {   // Validate the model
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
@@ -104,10 +113,9 @@ namespace CandidateDetails_API.Controllers
                     candidate.id = 0;
                 if (candidate.id == 0)
                 {
-                    string beforeAt = candidate.email_ID.Split('@')[0];
-                    // var uniqueFileName = $"{Guid.NewGuid()}_{candidate.cv.FileName}";
-                    string fileName = $"{candidate.name}_Email_{beforeAt}{Path.GetExtension(candidate.cv.FileName)}";
-                    var filePath = Path.Combine(CandidateCV, fileName);
+                    string beforeAt = candidate.email_ID.Split('@')[0]; // Get the email ID before '@'
+                    string fileName = $"{candidate.name}_Email_{beforeAt}{Path.GetExtension(candidate.cv.FileName)}"; // Generate a unique file name
+                    var filePath = Path.Combine(CandidateCV, fileName); // Combine the file path
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
@@ -119,9 +127,9 @@ namespace CandidateDetails_API.Controllers
                 }
                 else
                 {
-                    var can = await _context.candidateDetails.FirstOrDefaultAsync(x => x.id == candidate.id);
-                    var previousCV = Path.GetFileName(can.cvPath);
-                    var filePath = Path.Combine(CandidateCV, previousCV);
+                    var can = await _context.candidateDetails.FirstOrDefaultAsync(x => x.id == candidate.id); // Get the candidate details
+                    var previousCV = Path.GetFileName(can.cvPath); // Get the previous CV file name
+                    var filePath = Path.Combine(CandidateCV, previousCV); // Combine the file path
 
                     if (System.IO.File.Exists(filePath))
                     {
@@ -130,10 +138,10 @@ namespace CandidateDetails_API.Controllers
                     }
                     string beforeAt = candidate.email_ID.Split('@')[0];
                     // var uniqueFileName = $"{Guid.NewGuid()}_{candidate.cv.FileName}";
-                    string fileName = $"{candidate.name}_{candidate.id}_Email_{beforeAt}{Path.GetExtension(candidate.cv.FileName)}";
-                    var UpdatefilePath = Path.Combine(CandidateCV, fileName);
+                    string fileName = $"{candidate.name}_{candidate.id}_Email_{beforeAt}{Path.GetExtension(candidate.cv.FileName)}"; // Generate a unique file name
+                    var UpdatefilePath = Path.Combine(CandidateCV, fileName); // Combine the file path
 
-                    using (var stream = new FileStream(UpdatefilePath, FileMode.Create))
+                    using (var stream = new FileStream(UpdatefilePath, FileMode.Create)) // Create a new file
                     {
                         await candidate.cv.CopyToAsync(stream);
                     }
@@ -154,13 +162,18 @@ namespace CandidateDetails_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Soft delete the candidate
+        /// </summary>
+        /// <param name="id">Candidate id</param>
+        /// <returns>boolean</returns>
         [HttpDelete("DeleteCandidate/{id}")]
         public async Task<IActionResult> DeleteCandidate(int id)
         {
             try
             {
-                bool res = await _service.deleteCanndidate(id);
-                return Ok(new { success = res });
+                bool res = await _service.deleteCanndidate(id); // Call the service method to delete the candidate
+                return Ok(new { success = res }); // Return the result
             }
             catch (Exception ex)
             {
@@ -168,23 +181,28 @@ namespace CandidateDetails_API.Controllers
             }
         }
 
+        /// <summary>
+        /// To Download the CV of candidate
+        /// </summary>
+        /// <param name="candidateId">Candidate id</param>
+        /// <returns>CV of candidate</returns>
         [HttpGet("DownloadCV/{candidateId}")]
         public async Task<IActionResult> DownloadCV(int candidateId)
-        {
-            var candidate = await _context.candidateDetails.FirstOrDefaultAsync(x => x.id == candidateId);
-            string getFileName = Path.GetFileName(candidate.cvPath);
+        { 
+            var candidate = await _context.candidateDetails.FirstOrDefaultAsync(x => x.id == candidateId); // Get the candidate details
+            string getFileName = Path.GetFileName(candidate.cvPath); // Get the file name from the path
             // Path where CV files are stored
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "CandidateCV", getFileName);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "CandidateCV", getFileName); // Combine the file path
 
-            if (!System.IO.File.Exists(filePath))
+            if (!System.IO.File.Exists(filePath)) // Check if the file exists
             {
                 return NotFound("File not found.");
             }
 
-            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            var fileName = $"{candidate.name}_CV.pdf";
+            var fileBytes = System.IO.File.ReadAllBytes(filePath); // Read the file bytes
+            var fileName = $"{candidate.name}_CV.pdf"; // Generate the file name
 
-            return File(fileBytes, "application/pdf", fileName);
+            return File(fileBytes, "application/pdf", fileName);        
         }
     }
 }

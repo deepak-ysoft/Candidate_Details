@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, output, Output } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  OnInit,
+  output,
+  Output,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -60,18 +67,18 @@ export class AddCandidateComponent implements OnInit {
     this.submitted = false;
     this.candidateForm = this.fb.group({
       id: [null],
-      date: ['2024-12-27', Validators.required],
-      name: ['Deepak', Validators.required],
+      date: ['', Validators.required],
+      name: ['', Validators.required],
       contact_No: [
-        '4242342234',
+        '',
         [
           Validators.required,
           phoneValueRangeValidator(1000000000, 999999999999),
         ],
       ],
-      linkedin_Profile: ['23423csdfsdf.com', Validators.required],
+      linkedin_Profile: ['', Validators.required],
       email_ID: [
-        'werwewe@gmail.com',
+        '',
         [
           Validators.required,
           Validators.pattern(
@@ -79,18 +86,18 @@ export class AddCandidateComponent implements OnInit {
           ),
         ],
       ],
-      roles: ['hr', Validators.required],
-      experience: ['3 year', Validators.required],
-      skills: ['ds', Validators.required],
-      ctc: ['33333', Validators.required],
-      etc: ['44444', Validators.required],
-      notice_Period: ['4', Validators.required],
-      current_Location: ['sfsdf', Validators.required],
-      prefer_Location: ['sdfsdf', Validators.required],
-      reason_For_Job_Change: ['sfsdf', Validators.required],
-      schedule_Interview: ['2024-12-27 08:42', Validators.required],
-      schedule_Interview_status: ['asda', Validators.required],
-      comments: ['asdas', Validators.required],
+      roles: ['', Validators.required],
+      experience: ['', Validators.required],
+      skills: ['', Validators.required],
+      ctc: ['', Validators.required],
+      etc: ['', Validators.required],
+      notice_Period: ['', Validators.required],
+      current_Location: ['', Validators.required],
+      prefer_Location: ['', Validators.required],
+      reason_For_Job_Change: ['', Validators.required],
+      schedule_Interview: ['', Validators.required],
+      schedule_Interview_status: ['', Validators.required],
+      comments: ['', Validators.required],
       cv: ['', Validators.required],
     });
     this.commonService.addCandidateForm(this.candidateForm);

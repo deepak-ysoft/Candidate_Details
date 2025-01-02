@@ -515,13 +515,15 @@
           CV is required.
         </div>
       </div>
+      <div class="col-6 mt-3 d-flex justify-content-center">
+        <button
+          type="submit"
+          [disabled]="candidateForm.invalid"
+          class="btn btn-primary mt-3"
+        >
+          Submit
+        </button>
+      </div>
     </div>
-    <button
-      type="submit"
-      [disabled]="candidateForm.invalid"
-      class="btn btn-primary mt-3"
-    >
-      Submit
-    </button>
   </form>
 </div>

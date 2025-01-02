@@ -67,7 +67,7 @@
   <table class="table table-bordered table-striped">
     <thead class="thead-dark">
       <tr>
-        <th style="height: 50px">
+        <th class="mb-2">
           <span
             (click)="
               clickToSortCandidate(
@@ -84,7 +84,7 @@
             Date
           </span>
         </th>
-        <th style="height: 50px">
+        <th>
           <span
             (click)="
               clickToSortCandidate(
@@ -101,7 +101,7 @@
             Name
           </span>
         </th>
-        <th style="height: 50px">
+        <th>
           <span
             (click)="
               clickToSortCandidate(
@@ -118,7 +118,7 @@
             Contact No
           </span>
         </th>
-        <th style="height: 50px">
+        <th>
           <span
             (click)="
               clickToSortCandidate(
@@ -135,7 +135,7 @@
             LinkedIn Profile
           </span>
         </th>
-        <th style="height: 50px">
+        <th>
           <span
             (click)="
               clickToSortCandidate(
@@ -152,7 +152,7 @@
             Email
           </span>
         </th>
-        <th style="height: 50px">
+        <th>
           <span
             (click)="
               clickToSortCandidate(
@@ -169,7 +169,7 @@
             Roles
           </span>
         </th>
-        <th style="height: 50px">
+        <th>
           <span
             (click)="
               clickToSortCandidate(
@@ -186,7 +186,7 @@
             Experience
           </span>
         </th>
-        <th style="height: 50px">
+        <th>
           <span
             (click)="
               clickToSortCandidate(
@@ -203,7 +203,7 @@
             Skills
           </span>
         </th>
-        <th style="height: 50px">
+        <th>
           <span
             (click)="
               clickToSortCandidate(
@@ -220,7 +220,7 @@
             CTC
           </span>
         </th>
-        <th style="height: 50px">
+        <th>
           <span
             (click)="
               clickToSortCandidate(
@@ -270,8 +270,8 @@
             Interview Status
           </span>
         </th>
-        <th style="height: 50px">cv</th>
-        <th style="height: 50px">Actions</th>
+        <th>cv</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody *ngFor="let candidate of candidateList">
@@ -372,7 +372,7 @@
         >
           {{ candidate.schedule_Interview_status }}
         </td>
-        <td>
+        <td class="ellipsis-cell">
           <!-- Upload CV -->
           <!-- <input type="file" (change)="onCVUpload($event)" class="form-control mb-2" /> -->
           <!-- Download CV -->
@@ -389,7 +389,7 @@
             cv
           </button>
         </td>
-        <td>
+        <td class="ellipsis-cell">
           <i
             class="fas fa-edit text-primary me-2 cursorPointer"
             (click)="EditCandidate(candidate)"
@@ -410,110 +410,89 @@
     >Showing {{ firstCandidateOfPage }} to {{ lastCandidateOfPage }} of
     {{ totalcandidates }} candidates.</span
   >
-</div>
-<!-- Pagination Controls -->
-<nav
-  class="float-end me-4"
-  aria-label="Page navigation example"
-  *ngIf="totalpages > 1"
->
-  <ul class="pagination">
-    <li class="page-item cursorPointer" [class.disabled]="currentPage === 1">
-      <a class="page-link" (click)="loadPage(currentPage - 1)">Previous</a>
-    </li>
-    <li
-      *ngFor="let page of getDisplayedPages()"
-      class="page-item cursorPointer"
-      [class.active]="page === currentPage"
-      [class.disabled]="page === '...'"
-    >
-      <a
-        *ngIf="page !== '...'; else ellipsis"
-        class="page-link cursor-pointer"
-        (click)="loadPage(page)"
-        >{{ page }}</a
-      >
-      <ng-template #ellipsis>
-        <span class="page-link">...</span>
-      </ng-template>
-    </li>
-    <li
-      class="page-item cursorPointer"
-      [class.disabled]="currentPage === totalpages"
-    >
-      <a class="page-link cursor-pointer" (click)="loadPage(currentPage + 1)"
-        >Next</a
-      >
-    </li>
-  </ul>
-</nav>
 
-<nav class="float-end me-4">
-  <select
-    [(ngModel)]="pageSize"
-    (change)="onPageSizeChange($event)"
-    class="form-select"
+  <!-- Pagination Controls -->
+  <nav
+    class="float-end me-4"
+    aria-label="Page navigation example"
+    *ngIf="totalpages > 1"
   >
-    <option value="10">10</option>
-    <option value="20">20</option>
-    <option value="50">50</option>
-    <option value="100">100</option>
-  </select>
-</nav>
+    <ul class="pagination">
+      <li class="page-item cursorPointer" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="loadPage(currentPage - 1)">Previous</a>
+      </li>
+      <li
+        *ngFor="let page of getDisplayedPages()"
+        class="page-item cursorPointer"
+        [class.active]="page === currentPage"
+        [class.disabled]="page === '...'"
+      >
+        <a
+          *ngIf="page !== '...'; else ellipsis"
+          class="page-link cursor-pointer"
+          (click)="loadPage(page)"
+          >{{ page }}</a
+        >
+        <ng-template #ellipsis>
+          <span class="page-link">...</span>
+        </ng-template>
+      </li>
+      <li
+        class="page-item cursorPointer"
+        [class.disabled]="currentPage === totalpages"
+      >
+        <a class="page-link cursor-pointer" (click)="loadPage(currentPage + 1)"
+          >Next</a
+        >
+      </li>
+    </ul>
+  </nav>
 
-<span class="float-end me-2 mt-1">Select page size </span>
+  <nav class="float-end me-4">
+    <select
+      [(ngModel)]="pageSize"
+      (change)="onPageSizeChange($event)"
+      class="form-select"
+    >
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+  </nav>
 
-<ng-template #addCandidate let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Add Candidate</h4>
-    <button
-      type="button"
-      class="close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    >
-      <span aria-hidden="true">×</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <app-add-candidate
-      [candidateEdit]="clickedCandidateForEdit"
-      (isclick)="modal.close('Save click')"
-    />
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-dark"
-      (click)="modal.close('Save click')"
-    >
-      Ok
-    </button>
-  </div>
-</ng-template>
+  <span class="float-end me-2 mt-1">Select page size </span>
 
-<ng-template #candidateDetails let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Candidate Details</h4>
-    <button
-      type="button"
-      class="close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    >
-      <span aria-hidden="true">×</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <app-candidate-details [candidateDetail]="clickedCandidateForDetails" />
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-dark"
-      (click)="modal.close('Save click')"
-    >
-      Ok
-    </button>
-  </div>
-</ng-template>
+  <ng-template #addCandidate let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Add Candidate</h4>
+      <button
+        type="button"
+        class="btn btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <app-add-candidate
+        [candidateEdit]="clickedCandidateForEdit"
+        (isclick)="modal.close('Save click')"
+      />
+    </div>
+  </ng-template>
+
+  <ng-template #candidateDetails let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Candidate Details</h4>
+      <button
+        type="button"
+        class="btn btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <app-candidate-details [candidateDetail]="clickedCandidateForDetails" />
+    </div>
+  </ng-template>
+</div>
