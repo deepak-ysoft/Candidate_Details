@@ -152,7 +152,6 @@ namespace CandidateDetails_API.Controllers
                 // Save candidate details
                 res = await _service.AddEditCandidate(candidate);
 
-
                 return Ok(new { success = res });
 
             }

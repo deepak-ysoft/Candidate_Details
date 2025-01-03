@@ -2,12 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, OnInit } from '@angular/core';
 import { Candidate } from '../Models/candidate.model';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CandidateService {
-  private apiUrl = 'https://localhost:44319/api/Candidate/GetCandidates';
+  private baseUrl = environment.apiURL;
+
   isCandidateAddOrUpdate = false;
   private candidateListSubject = new BehaviorSubject<Candidate[]>([]);
   private totalCandidatesSubject = new BehaviorSubject<number>(0);
@@ -35,7 +37,7 @@ export class CandidateService {
       .set('SearchField', SearchField)
       .set('SearchValue', SearchValue);
 
-    this.http.get(this.apiUrl, { params }).subscribe({
+    this.http.get(`${this.baseUrl}GetCandidates`, { params }).subscribe({
       next: (data: any) => {
         this.candidateListSubject.next(data.data);
         this.totalCandidatesSubject.next(data.totalCount);
@@ -49,28 +51,20 @@ export class CandidateService {
   }
 
   UploadExcel(excel: FormData) {
-    return this.http.post(
-      `https://localhost:44319/api/Candidate/AddCandidatesFromExcel`,
-      excel
-    );
+    return this.http.post(`AddCandidatesFromExcel`, excel);
   }
 
   AddEditCandidate(data: FormData) {
     this.isCandidateAddOrUpdate = true;
-    return this.http.post(
-      `https://localhost:44319/api/Candidate/AddEditCandidate`,
-      data
-    );
+    return this.http.post(`${this.baseUrl}AddEditCandidate`, data);
   }
 
   deleteCandidate(id: number) {
-    return this.http.delete(
-      `https://localhost:44319/api/Candidate/DeleteCandidate/${id}`
-    );
+    return this.http.delete(`${this.baseUrl}DeleteCandidate/${id}`);
   }
 
   downloadCV(candidateId: number) {
-    const url = `https://localhost:44319/api/Candidate/DownloadCV/${candidateId}`;
+    const url = `${this.baseUrl}DownloadCV/${candidateId}`;
     return this.http.get(url, { responseType: 'blob' });
   }
 }
