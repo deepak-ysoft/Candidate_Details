@@ -276,28 +276,13 @@
     </thead>
     <tbody *ngFor="let candidate of candidateList">
       <tr *ngIf="candidateList && candidateList != null">
-        <td
-          class="ellipsis-cell"
-          [matTooltip]="candidate.date.toString()"
-          matTooltipPosition="above"
-          matTooltipClass="custom-tooltip"
-        >
+        <td class="ellipsis-cell">
           {{ candidate.date | date : "shortDate" }}
         </td>
-        <td
-          class="ellipsis-cell"
-          [matTooltip]="candidate.name"
-          matTooltipPosition="above"
-          matTooltipClass="custom-tooltip"
-        >
+        <td class="ellipsis-cell">
           {{ candidate.name }}
         </td>
-        <td
-          class="ellipsis-cell"
-          [matTooltip]="candidate.contact_No"
-          matTooltipPosition="above"
-          matTooltipClass="custom-tooltip"
-        >
+        <td class="ellipsis-cell">
           {{ candidate.contact_No }}
         </td>
         <td
@@ -316,20 +301,10 @@
         >
           {{ candidate.email_ID }}
         </td>
-        <td
-          class="ellipsis-cell"
-          [matTooltip]="candidate.roles"
-          matTooltipPosition="above"
-          matTooltipClass="custom-tooltip"
-        >
+        <td class="ellipsis-cell">
           {{ candidate.roles }}
         </td>
-        <td
-          class="ellipsis-cell"
-          [matTooltip]="candidate.experience"
-          matTooltipPosition="above"
-          matTooltipClass="custom-tooltip"
-        >
+        <td class="ellipsis-cell">
           {{ candidate.experience }}
         </td>
         <td
@@ -340,28 +315,13 @@
         >
           {{ candidate.skills }}
         </td>
-        <td
-          class="ellipsis-cell"
-          [matTooltip]="candidate.ctc.toString()"
-          matTooltipPosition="above"
-          matTooltipClass="custom-tooltip"
-        >
+        <td class="ellipsis-cell">
           {{ candidate.ctc }}
         </td>
-        <td
-          class="ellipsis-cell"
-          [matTooltip]="candidate.etc.toString()"
-          matTooltipPosition="above"
-          matTooltipClass="custom-tooltip"
-        >
+        <td class="ellipsis-cell">
           {{ candidate.etc }}
         </td>
-        <td
-          class="ellipsis-cell"
-          [matTooltip]="candidate.schedule_Interview.toString()"
-          matTooltipPosition="above"
-          matTooltipClass="custom-tooltip"
-        >
+        <td class="ellipsis-cell">
           {{ candidate.schedule_Interview | date : "short" }}
         </td>
         <td
@@ -377,11 +337,12 @@
           <!-- <input type="file" (change)="onCVUpload($event)" class="form-control mb-2" /> -->
           <!-- Download CV -->
           <button
-            class="text-success cursorPointer rounded-pill border-primary"
+            class="text-success rounded-pill border-primary"
             [disabled]="!candidate.cvPath"
             [ngClass]="{
-              'text-success border-primary': candidate.cvPath,
-              'text-secondary border-secondary': !candidate.cvPath
+              'text-success border-primary cursorPointer': candidate.cvPath,
+              'text-secondary border-secondary cursornotallowed':
+                !candidate.cvPath
             }"
             (click)="downloadCV(candidate.id, candidate.name)"
           >

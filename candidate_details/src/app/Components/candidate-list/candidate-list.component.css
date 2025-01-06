@@ -29,6 +29,10 @@ td {
   cursor: pointer !important;
 }
 
+.cursornotallowed {
+  cursor: not-allowed;
+}
+
 .uploadDiv {
   position: relative;
   overflow: hidden;
