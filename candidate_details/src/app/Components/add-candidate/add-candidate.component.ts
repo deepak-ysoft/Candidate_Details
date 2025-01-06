@@ -81,9 +81,7 @@ export class AddCandidateComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern(
-            /^[a-zA-Z]{5,}[a-zA-Z0-9._%+-]*@[a-zA-Z.-]+\.[a-zA-Z]{2,}$/
-          ),
+          Validators.pattern(/^[a-zA-Z0-9._%+-]*@[a-zA-Z.-]+\.[a-zA-Z]{2,}$/),
         ],
       ],
       roles: ['', Validators.required],
