@@ -16,7 +16,7 @@ namespace CandidateDetails_API.Model
         [Required]
         public string linkedin_Profile { get; set; }
         [Required]
-        [RegularExpression("^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address.")]
+        [RegularExpression("^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address.")] // Email validation
         public string email_ID { get; set; }
         [Required]
         public string roles { get; set; }
