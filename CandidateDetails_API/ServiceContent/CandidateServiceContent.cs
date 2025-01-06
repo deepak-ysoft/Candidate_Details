@@ -33,8 +33,7 @@ namespace CandidateDetails_API.ServiceContent
                 }
 
                 candidate.isDelete = false;
-                _context.Entry(candidate).State = EntityState.Modified;
-                // _context.candidateDetails.Update(candidate);
+                _context.Entry(candidate).State = EntityState.Modified; // Mark the candidate as modified
                 res = await _context.SaveChangesAsync();
             }
             if (res == 0) // If no record is updated
