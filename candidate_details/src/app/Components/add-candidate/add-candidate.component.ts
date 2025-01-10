@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  Input,
-  OnInit,
-  output,
-  Output,
-} from '@angular/core';
+import { Component, inject, Input, OnInit, output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -18,8 +11,8 @@ import {
 } from '@angular/forms';
 import { CandidateService } from '../../Services/candidate.service';
 import { CommonServiceService } from '../../Services/common-service.service';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EventEmitter } from 'stream';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Roles } from '../../Models/Roles.model';
 
 @Component({
   selector: 'app-add-candidate',
@@ -34,12 +27,15 @@ export class AddCandidateComponent implements OnInit {
   candidateServices = inject(CandidateService);
   commonService = inject(CommonServiceService);
   @Input() candidateEdit?: any;
+  @Input() addClicked?: any;
   isclick = output<boolean>();
+  RolesList: Roles[] = [];
+  selectedRoleId = '';
 
   ngOnInit(): void {
-    console.log('add', this.candidateEdit);
-    if (this.candidateEdit?.id) {
-      debugger;
+    this.candidateServices.resetForm$.subscribe(() => this.onAdd());
+    this.getRoles();
+    if (this.candidateEdit?.id && !this.addClicked) {
       this.candidateForm.patchValue({
         id: this.candidateEdit?.id,
         date: this.candidateEdit.date,
@@ -59,8 +55,10 @@ export class AddCandidateComponent implements OnInit {
         schedule_Interview: this.candidateEdit.schedule_Interview,
         schedule_Interview_status: this.candidateEdit.schedule_Interview_status,
         comments: this.candidateEdit.comments,
-        cv: this.candidateEdit.cv,
+        cv: this.candidateEdit.cvPath,
       });
+    } else {
+      this.onAdd();
     }
   }
   constructor(private fb: FormBuilder, private modalService: NgbModal) {
@@ -84,7 +82,7 @@ export class AddCandidateComponent implements OnInit {
           Validators.pattern(/^[a-zA-Z0-9._%+-]*@[a-zA-Z.-]+\.[a-zA-Z]{2,}$/),
         ],
       ],
-      roles: ['', Validators.required],
+      roles: [],
       experience: ['', Validators.required],
       skills: ['', Validators.required],
       ctc: ['', Validators.required],
@@ -96,7 +94,7 @@ export class AddCandidateComponent implements OnInit {
       schedule_Interview: ['', Validators.required],
       schedule_Interview_status: ['', Validators.required],
       comments: ['', Validators.required],
-      cv: ['', Validators.required],
+      cv: [],
     });
     this.commonService.addCandidateForm(this.candidateForm);
   }
@@ -126,9 +124,24 @@ export class AddCandidateComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    debugger;
+  getRoles() {
+    this.candidateServices.getRoles().subscribe((res: any) => {
+      this.RolesList = res;
+    });
+  }
 
+  onRoleChange(event: Event): void {
+    this.selectedRoleId = (event.target as HTMLSelectElement).value;
+  }
+
+  onAdd(): void {
+    this.submitted = false;
+    this.candidateForm.reset();
+    this.candidateForm.markAsPristine();
+    this.candidateForm.markAsUntouched();
+    this.candidateForm.updateValueAndValidity();
+  }
+  onSubmit() {
     this.submitted = true;
     if (this.candidateForm.valid) {
       const formData = new FormData();
@@ -154,7 +167,10 @@ export class AddCandidateComponent implements OnInit {
         'email_ID',
         this.candidateForm.get('email_ID')?.value || ''
       );
-      formData.append('roles', this.candidateForm.get('roles')?.value || '');
+      formData.append(
+        'roles',
+        this.selectedRoleId || this.candidateForm.get('roles')?.value || ''
+      );
       formData.append(
         'experience',
         this.candidateForm.get('experience')?.value || ''
@@ -194,7 +210,9 @@ export class AddCandidateComponent implements OnInit {
       if (this.selectedFile) {
         formData.append('cv', this.selectedFile, this.selectedFile.name);
       }
-
+      formData.forEach((value, key) => {
+        console.log(`${key}:`, value);
+      });
       this.candidateServices.AddEditCandidate(formData).subscribe({
         next: (res: any) => {
           if (res.success) {

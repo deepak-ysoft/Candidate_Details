@@ -7,7 +7,9 @@ import { FormsModule } from '@angular/forms';
 import { CandidateDetailsComponent } from '../candidate-details/candidate-details.component';
 import { CommonServiceService } from '../../Services/common-service.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import Swal from 'sweetalert2';import { MatTooltipModule } from '@angular/material/tooltip';
+import Swal from 'sweetalert2';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-candidate-list',
@@ -15,7 +17,9 @@ import Swal from 'sweetalert2';import { MatTooltipModule } from '@angular/materi
     FormsModule,
     CommonModule,
     AddCandidateComponent,
-    CandidateDetailsComponent,MatTooltipModule
+    CandidateDetailsComponent,
+    MatTooltipModule,
+    RouterLink,
   ],
   templateUrl: './candidate-list.component.html',
   styleUrl: './candidate-list.component.css',
@@ -25,6 +29,7 @@ export class CandidateListComponent {
   @ViewChild('candidateDetails', { static: false })
   candidateDetails!: ElementRef;
   clickedCandidateForDetails!: Candidate;
+  CandidateRole = '';
   clickedCandidateForEdit!: Candidate;
   candidateList: Candidate[] = [];
   isCVAvailable = false; // Set to true if CV exists for the candidate
@@ -54,7 +59,6 @@ export class CandidateListComponent {
   ) {}
 
   ngOnInit(): void {
-    debugger;
     this.candidateService.candidateList$.subscribe((candidates) => {
       this.candidateList = candidates;
     });
@@ -83,7 +87,6 @@ export class CandidateListComponent {
       );
   }
   onUploadExcelFileChange(event: any): void {
-    debugger;
     const file = event.target.files[0];
     if (file) {
       this.excelFileUpload = file;
@@ -124,7 +127,6 @@ export class CandidateListComponent {
     SearchField: string,
     SearchValue: string
   ): void {
-    debugger;
     // Toggle sorting direction
     this.isSort = !this.isSort;
     sortDirection = this.isSort ? 'asc' : 'desc';
@@ -149,13 +151,11 @@ export class CandidateListComponent {
   }
 
   onSearchFieldChange(event: Event) {
-    debugger;
     const selectedValue = (event.target as HTMLSelectElement).value;
     this.SearchField = selectedValue;
   }
 
   clickToSearchCandidate(): void {
-    debugger;
     // Update class variables
     this.searchTerm = this.searchTerms;
 
@@ -170,8 +170,14 @@ export class CandidateListComponent {
     );
   }
 
+  addClicked = false;
   openAccCandidateModel() {
+    this.addClicked = true;
+    setTimeout(() => {
+      this.addClicked = false;
+    }, 0);
     this.open(this.addCandidate);
+    this.candidateService.triggerResetForm();
   }
 
   EditCandidate(candidate: Candidate) {
@@ -182,14 +188,21 @@ export class CandidateListComponent {
   }
 
   ShowCandidateDetails(candidate: Candidate) {
-    this.clickedCandidateForDetails = candidate;
+    this.candidateService.GetCandidate(candidate.id).subscribe((res: any) => {
+      this.clickedCandidateForDetails = res.can;
+      this.CandidateRole = res.role.role;
+    });
     this.open(this.candidateDetails);
   }
 
   deleteCandidate(id: number) {
-    this.candidateService.deleteCandidate(id).subscribe((res: any) => {
-      if (res.success) {
-        this.clickToSearchCandidate();
+    this.candidateService.confirmDelete().then((result: any) => {
+      if (result.isConfirmed) {
+        this.candidateService.deleteCandidate(id).subscribe((res: any) => {
+          if (res.success) {
+            this.clickToSearchCandidate();
+          }
+        });
       }
     });
   }
@@ -232,7 +245,6 @@ export class CandidateListComponent {
   }
 
   onPageSizeChange(event: Event) {
-    debugger;
     const selectedValue = (event.target as HTMLSelectElement).value;
     this.pageSize = +selectedValue; // Convert to number
 
@@ -262,14 +274,29 @@ export class CandidateListComponent {
   }
 
   downloadCV(candidateId: number, candidateName: string) {
-    debugger;
     this.candidateService.downloadCV(candidateId).subscribe({
       next: (response: Blob) => {
-        debugger;
         const url = window.URL.createObjectURL(response);
         const link = document.createElement('a');
         link.href = url;
         link.download = `Candidate_${candidateName}${candidateId}_CV.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Error downloading CV.');
+      },
+    });
+  }
+
+  downloadCandidateExcel() {
+    this.candidateService.downloadExcel().subscribe({
+      next: (response: Blob) => {
+        const url = window.URL.createObjectURL(response);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `CandidateDetails.xlsx`;
         link.click();
         window.URL.revokeObjectURL(url);
       },

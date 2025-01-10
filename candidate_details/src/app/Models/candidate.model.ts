@@ -1,3 +1,5 @@
+import { Roles } from './Roles.model';
+
 export class Candidate {
   id: number = 0;
   date: Date = new Date();
@@ -5,7 +7,8 @@ export class Candidate {
   contact_No: string = '';
   linkedin_Profile: string = '';
   email_ID: string = '';
-  roles: string = '';
+  roles: Roles = new Roles();
+  roleName?: string;
   experience: string = '';
   skills: string = '';
   ctc: number = 0;

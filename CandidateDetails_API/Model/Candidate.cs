@@ -19,7 +19,10 @@ namespace CandidateDetails_API.Model
         [RegularExpression("^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\\.[a-zA-Z]{2,}$", ErrorMessage = "Please enter a valid email address.")] // Email validation
         public string email_ID { get; set; }
         [Required]
-        public string roles { get; set; }
+        [ForeignKey("Roles")]
+        public int roles { get; set; }
+        [NotMapped]
+        public string? roleName { get; set; }
         [Required]
         public string experience { get; set; }
         [Required]
@@ -43,7 +46,7 @@ namespace CandidateDetails_API.Model
         [Required]
         public string comments { get; set; }
         [NotMapped]
-        public IFormFile cv { get; set; }
+        public IFormFile? cv { get; set; }
         public string? cvPath { get; set; }
         public bool? isDelete { get; set; }
     }

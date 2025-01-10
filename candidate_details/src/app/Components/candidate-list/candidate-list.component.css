@@ -64,3 +64,9 @@ td {
 .modal-header {
   background-color: rgb(217, 246, 246);
 }
+
+.scrollable {
+  width: 300px;
+  overflow-y: auto;
+}
+

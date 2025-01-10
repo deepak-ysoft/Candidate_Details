@@ -9,5 +9,5 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CandidateDetailsComponent {
   @Input() candidateDetail?: any;
- 
+  @Input() CandidateRole?: any;
 }

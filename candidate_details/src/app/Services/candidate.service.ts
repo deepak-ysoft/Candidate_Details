@@ -1,8 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, OnInit } from '@angular/core';
 import { Candidate } from '../Models/candidate.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
+import Swal from 'sweetalert2';
+import { Roles } from '../Models/Roles.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,13 @@ export class CandidateService {
   candidateList$ = this.candidateListSubject.asObservable();
   totalCandidates$ = this.totalCandidatesSubject.asObservable();
   totalPages$ = this.totalPagesSubject.asObservable();
+
+  private resetFormSubject = new Subject<void>();
+  resetForm$ = this.resetFormSubject.asObservable();
+
+  triggerResetForm(): void {
+    this.resetFormSubject.next();
+  }
 
   constructor(private http: HttpClient) {}
 
@@ -42,7 +51,6 @@ export class CandidateService {
         this.candidateListSubject.next(data.data);
         this.totalCandidatesSubject.next(data.totalCount);
         this.totalPagesSubject.next(Math.ceil(data.totalCount / pageSize));
-        debugger;
       },
       error: (error) => {
         console.error('Error fetching candidates:', error);
@@ -51,7 +59,30 @@ export class CandidateService {
   }
 
   UploadExcel(excel: FormData) {
-    return this.http.post(`AddCandidatesFromExcel`, excel);
+    return this.http.post(`${this.baseUrl}AddCandidatesFromExcel`, excel);
+  }
+
+  getRoles() {
+    return this.http.get(`${this.baseUrl}GetRoles`);
+  }
+
+  AddUpdateRole(role: Roles) {
+    return this.http.post(`${this.baseUrl}CreateEditRole`, role);
+  }
+
+  confirmDelete() {
+    return Swal.fire({
+      title: 'Are you sure?',
+      text: 'Once deleted, you will not be able to recover this data!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, keep it',
+    });
+  }
+
+  DeleteRole(roleId: number) {
+    return this.http.delete(`${this.baseUrl}DeleteRole/${roleId}`);
   }
 
   AddEditCandidate(data: FormData) {
@@ -66,5 +97,14 @@ export class CandidateService {
   downloadCV(candidateId: number) {
     const url = `${this.baseUrl}DownloadCV/${candidateId}`;
     return this.http.get(url, { responseType: 'blob' });
+  }
+
+  downloadExcel() {
+    const url = `${this.baseUrl}DownloadExcel`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
+
+  GetCandidate(candidateId: number) {
+    return this.http.get(`${this.baseUrl}GetCandidate/${candidateId}`);
   }
 }

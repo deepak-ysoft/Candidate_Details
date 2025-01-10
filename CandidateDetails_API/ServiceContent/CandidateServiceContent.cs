@@ -72,15 +72,29 @@ namespace CandidateDetails_API.ServiceContent
                 }
                 for (int row = 2; row <= filledRowCount; row++) // Headers are in the first row
                 {
+                    var roleStr = worksheet.Cells[row, 7].Text.Trim(); // Removes leading and trailing spaces
+                    int role = 0;
+
+                    var Roles = await _context.Roles.ToListAsync(); // Get all roles from database
+
+                    foreach (var r in Roles) // Loop through each role
+                    {
+                        if (r.role.ToLower().Trim() == roleStr.ToLower()) // If role is found
+                        {
+                            role = r.rid; // Set role id
+                            break;
+                        }
+                    }
+
                     var candidate = new Candidate // Create a new candidate object
                     {
-                        id = int.Parse(worksheet.Cells[row, 1].Text),
+                        //id = int.Parse(worksheet.Cells[row, 1].Text),
                         date = DateTime.Parse(worksheet.Cells[row, 2].Text),
                         name = worksheet.Cells[row, 3].Text,
                         contact_No = worksheet.Cells[row, 4].Text,
                         linkedin_Profile = worksheet.Cells[row, 5].Text,
                         email_ID = worksheet.Cells[row, 6].Text,
-                        roles = worksheet.Cells[row, 7].Text,
+                        roles = role,
                         experience = worksheet.Cells[row, 8].Text,
                         skills = worksheet.Cells[row, 9].Text,
                         ctc = decimal.Parse(worksheet.Cells[row, 10].Text),
@@ -92,7 +106,9 @@ namespace CandidateDetails_API.ServiceContent
                         schedule_Interview = DateTime.Parse(worksheet.Cells[row, 16].Text),
                         schedule_Interview_status = worksheet.Cells[row, 17].Text,
                         comments = worksheet.Cells[row, 18].Text,
+                        cvPath = worksheet.Cells[row, 19].Text,
                         isDelete = false
+
                     };
                     if (double.TryParse(candidate.contact_No, out double number)) // Check if contact number is a number
                     {
@@ -139,7 +155,7 @@ namespace CandidateDetails_API.ServiceContent
                 schedule_Interview_status = candidate.schedule_Interview_status,
                 comments = candidate.comments,
                 cvPath = candidate.cvPath,
-                isDelete = false,
+                isDelete = true,
             };
             var existingEntity = _context.ChangeTracker.Entries<Candidate>().FirstOrDefault(e => e.Entity.id == candidate.id); // Get existing candidate
 
@@ -148,6 +164,49 @@ namespace CandidateDetails_API.ServiceContent
                 _context.Entry(existingEntity.Entity).State = EntityState.Detached; // Detach the existing candidate
             }
             _context.Entry(candidateObj).State = EntityState.Modified; // Mark the candidate as modified
+            var res = await _context.SaveChangesAsync();
+            if (res == 0) // If no record is updated
+                return false;
+            return true;
+        }
+
+        public async Task<bool> CreateEditRoles(Roles role)
+        {
+            if (role.rid == 0) // If role id is 0, then add new role
+            {
+                var existingEntity = _context.ChangeTracker.Entries<Candidate>().FirstOrDefault(e => e.Entity.id == role.rid); // Get existing candidate
+
+                if (existingEntity != null)     // If existing candidate is not null
+                {
+                    _context.Entry(existingEntity.Entity).State = EntityState.Detached; // Detach the existing candidate
+                }
+                _context.Roles.Add(role); // Add role to database
+            }
+            else // If role id is not 0, then edit existing role
+            {
+                var existingEntity = _context.ChangeTracker.Entries<Candidate>().FirstOrDefault(e => e.Entity.id == role.rid); // Get existing candidate
+
+                if (existingEntity != null)     // If existing candidate is not null
+                {
+                    _context.Entry(existingEntity.Entity).State = EntityState.Detached; // Detach the existing candidate
+                }
+                var roles = new Roles // Create a new candidate object
+                {
+                    rid = role.rid,
+                    role = role.role,
+                };
+                _context.Entry(roles).State = EntityState.Modified; // Mark the candidate as modified
+            }
+            var res = _context.SaveChanges();
+            if (res == 0) // If no record is updated
+                return false;
+            return true;
+        }
+
+        public async Task<bool> deleteRole(int id)
+        {
+            var role = _context.Roles.Where(x => x.rid == id).FirstOrDefault(); // Get role by id
+            _context.Remove(role); // Remove role from database
             var res = await _context.SaveChangesAsync();
             if (res == 0) // If no record is updated
                 return false;

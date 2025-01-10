@@ -58,7 +58,7 @@
       <div class="col-md-6 mb-3">
         <label for="contactNo" class="form-label">Contact Number</label>
         <input
-          type="text"
+          type="number"
           id="contactNo"
           formControlName="contact_No"
           class="form-control"
@@ -121,8 +121,8 @@
         </div>
         <small
           class="text-danger"
-          *ngIf="candidateForm.get('roles')?.hasError('serverError')"
-          >{{ candidateForm.get('roles')?.errors?.['serverError'] }}</small
+          *ngIf="candidateForm.get('linkedin_Profile')?.hasError('serverError')"
+          >{{ candidateForm.get('linkedin_Profile')?.errors?.['serverError'] }}</small
         >
       </div>
     </div>
@@ -157,12 +157,22 @@
       <!-- Roles -->
       <div class="col-md-6 mb-3">
         <label for="roles" class="form-label">Roles</label>
-        <input
+        <select
+          id="roles"
+          class="form-select"
+          formControlName="roles"
+          (change)="onRoleChange($event)"
+        >
+          <option *ngFor="let role of RolesList" [value]="role.rid">
+            {{ role.role }}
+          </option>
+        </select>
+        <!-- <input
           type="text"
           id="roles"
           formControlName="roles"
           class="form-control"
-        />
+        /> -->
         <div
           class="text-danger"
           *ngIf="
@@ -502,7 +512,7 @@
           class="form-control"
           (change)="onFileChange($event)"
           formControlName="cv"
-          name="photo"
+          name="cv"
           accept="application/pdf"
         />
         <div
