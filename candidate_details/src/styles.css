@@ -14,9 +14,17 @@ body {
    left: 0;
    background-color: #ffff !important; /* Ensure sticky column has a background */
    z-index: 2; /* Keep the sticky column above the other cells */
- }
- 
- .table-responsive {
+}
+
+.table-responsive {
    overflow-y: auto;
- }
- 
+}
+
+.mat-mdc-tooltip-surface {
+   background-color: #ff5733 !important;
+   color: white !important;
+   font-size: 18px !important;
+   z-index: 1000 !important; /* Ensure it appears above other elements */
+   padding: 10px !important; /* Optional: Adjust padding */
+   border-radius: 5px !important; /* Optional: Rounded corners */
+}

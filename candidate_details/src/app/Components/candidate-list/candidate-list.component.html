@@ -270,7 +270,22 @@
                 clickToSortCandidate(
                   PageNumber,
                   pageSize,
-
+                  'current_Location',
+                  sortDirection,
+                  searchTerm,
+                  SearchField
+                )
+              "
+            >
+              Current Location
+            </span>
+          </th>
+          <th class="ellipsis-cell">
+            <span
+              (click)="
+                clickToSortCandidate(
+                  PageNumber,
+                  pageSize,
                   'prefer_Location',
                   sortDirection,
                   searchTerm,
@@ -298,6 +313,7 @@
               Job Change Reason
             </span>
           </th>
+
           <th class="ellipsis-cell">
             <span
               (click)="
@@ -322,25 +338,7 @@
                 clickToSortCandidate(
                   PageNumber,
                   pageSize,
-
-                  'current_Location',
-                  sortDirection,
-                  searchTerm,
-                  SearchField
-                )
-              "
-            >
-              Current Location
-            </span>
-          </th>
-
-          <th class="ellipsis-cell">
-            <span
-              (click)="
-                clickToSortCandidate(
-                  PageNumber,
-                  pageSize,
-                  'Schedule_Interview_status',
+                  'schedule_Interview_status',
                   sortDirection,
                   searchTerm,
                   SearchField
@@ -348,6 +346,22 @@
               "
             >
               Interview Status
+            </span>
+          </th>
+          <th class="ellipsis-cell">
+            <span
+              (click)="
+                clickToSortCandidate(
+                  PageNumber,
+                  pageSize,
+                  'comments',
+                  sortDirection,
+                  searchTerm,
+                  SearchField
+                )
+              "
+            >
+              Comments
             </span>
           </th>
           <th>cv</th>
@@ -383,7 +397,7 @@
             class="ellipsis-cell"
             [matTooltip]="candidate.linkedin_Profile"
             matTooltipPosition="above"
-            matTooltipClass="custom-tooltip"
+            [matTooltipClass]="'custom-tooltip'"
           >
             {{ candidate.linkedin_Profile }}
           </td>
@@ -391,7 +405,7 @@
             class="ellipsis-cell"
             [matTooltip]="candidate.email_ID"
             matTooltipPosition="above"
-            matTooltipClass="custom-tooltip"
+            [matTooltipClass]="'custom-tooltip'"
           >
             {{ candidate.email_ID }}
           </td>
@@ -405,7 +419,7 @@
             class="ellipsis-cell"
             [matTooltip]="candidate.skills"
             matTooltipPosition="above"
-            matTooltipClass="custom-tooltip"
+            [matTooltipClass]="'custom-tooltip'"
           >
             {{ candidate.skills }}
           </td>
@@ -430,13 +444,17 @@
           <td class="ellipsis-cell">
             {{ candidate.schedule_Interview | date : "short" }}
           </td>
+
           <td
             class="ellipsis-cell"
             [matTooltip]="candidate.schedule_Interview_status"
             matTooltipPosition="above"
-            matTooltipClass="custom-tooltip"
+            [matTooltipClass]="'custom-tooltip'"
           >
             {{ candidate.schedule_Interview_status }}
+          </td>
+          <td class="ellipsis-cell">
+            {{ candidate.comments }}
           </td>
           <td class="ellipsis-cell">
             <!-- Upload CV -->

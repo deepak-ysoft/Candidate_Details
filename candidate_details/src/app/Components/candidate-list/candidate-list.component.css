@@ -37,6 +37,7 @@ td {
   position: relative;
   overflow: hidden;
 }
+
 .uploadinput {
   position: absolute;
   font-size: 50px;
@@ -54,12 +55,13 @@ td {
   white-space: nowrap; /* Prevents wrapping to the next line */
   /* display: inline-block; Keeps the element inline */
 }
+
 /* Global style */
-::ng-deep .custom-tooltip {
-  background-color: #ff5733 !important; /* Custom background */
-  color: white !important; /* Custom text color */
-  font-size: 16px !important; /* Optional: Font size */
-}
+/* ::ng-deep .custom-tooltip {
+  background-color: #ff5733 !important; 
+  color: white !important; 
+  font-size: 16px !important; 
+} */
 
 .modal-header {
   background-color: rgb(217, 246, 246);
@@ -69,4 +71,3 @@ td {
   width: 300px;
   overflow-y: auto;
 }
-
