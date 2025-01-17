@@ -45,7 +45,7 @@ export class LayoutComponent {
         window.URL.revokeObjectURL(url);
       },
       error: (err) => {
-        console.error(err);
+       // console.error(err);
         alert('Error downloading CV.');
       },
     });

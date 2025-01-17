@@ -53,7 +53,7 @@ export class CandidateService {
         this.totalPagesSubject.next(Math.ceil(data.totalCount / pageSize));
       },
       error: (error) => {
-        console.error('Error fetching candidates:', error);
+       // console.error('Error fetching candidates:', error);
       },
     });
   }

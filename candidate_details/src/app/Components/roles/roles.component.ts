@@ -111,7 +111,7 @@ export class RolesComponent implements OnInit {
           },
           error: (err: any) => {
             // Handle error response
-            console.error('Error occurred:', err);
+           // console.error('Error occurred:', err);
             if (err.status === 500) {
               // Extract error message from the response
               Swal.fire({

@@ -283,7 +283,7 @@ export class CandidateListComponent {
         window.URL.revokeObjectURL(url);
       },
       error: (err) => {
-        console.error(err);
+     //   console.error(err);
         alert('Error downloading CV.');
       },
     });

@@ -146,8 +146,11 @@ namespace CandidateDetails_API.Controllers
             var calendar = await _context.calendar.FirstOrDefaultAsync(a => a.CalId == request.Id);
             if (calendar != null)
             {
-                calendar.StartDate = request.NewStart.AddHours(5).AddMinutes(30);
-                calendar.EndDate = request.NewEnd.AddHours(5).AddMinutes(30);
+                //calendar.StartDate = request.NewStart.AddHours(5).AddMinutes(30);
+                //calendar.EndDate = request.NewEnd.AddHours(5).AddMinutes(30); 
+                
+                calendar.StartDate = request.NewStart;
+                calendar.EndDate = request.NewEnd;
 
                 await _context.SaveChangesAsync();
                 return Ok(); // Return a success response
