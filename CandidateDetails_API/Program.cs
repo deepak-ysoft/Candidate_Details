@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<ICandidateService, CandidateServiceContent>(); // Register the service
+builder.Services.AddScoped<ICalendarService, CalendarServiceContent>(); // Register the service
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(); 

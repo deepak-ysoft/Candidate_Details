@@ -20,6 +20,7 @@ import { RouterLink } from '@angular/router';
 export class RolesComponent implements OnInit {
   roleForm: FormGroup;
   roleEdit: Roles = new Roles();
+  formType: string = 'Add Role';
 
   RolesList: Roles[] = [];
   constructor(
@@ -33,10 +34,12 @@ export class RolesComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getRoles();
+    this.formType = 'Add Role';
   }
 
   editRole(role: Roles) {
     this.onAdd();
+    this.formType = 'Edit Role';
     this.roleEdit = role;
     if (role.rid) {
       this.roleForm.patchValue({

@@ -19,7 +19,6 @@ import { RouterLink } from '@angular/router';
     AddCandidateComponent,
     CandidateDetailsComponent,
     MatTooltipModule,
-    RouterLink,
   ],
   templateUrl: './candidate-list.component.html',
   styleUrl: './candidate-list.component.css',
@@ -280,23 +279,6 @@ export class CandidateListComponent {
         const link = document.createElement('a');
         link.href = url;
         link.download = `Candidate_${candidateName}${candidateId}_CV.pdf`;
-        link.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (err) => {
-        console.error(err);
-        alert('Error downloading CV.');
-      },
-    });
-  }
-
-  downloadCandidateExcel() {
-    this.candidateService.downloadExcel().subscribe({
-      next: (response: Blob) => {
-        const url = window.URL.createObjectURL(response);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `CandidateDetails.xlsx`;
         link.click();
         window.URL.revokeObjectURL(url);
       },

@@ -1,0 +1,38 @@
+<div class="container">
+   <div class="row">
+     <div class="col">
+       <div class="card mt-5 shadow magic-card">
+         <div class="card-body holiday-card">
+           <h5 class="card-title">
+             Company Holidays <i class="fa-solid fa-mug-hot ms-2"></i>
+           </h5>
+           <ul class="list-group" *ngFor="let Holiday of holidayList">
+             <li class="list-group-item magic-list">
+               <b>{{ Holiday.subject }} holiday</b>,&nbsp;
+               {{ Holiday.startDate | date: "dd/MM/yyyy" }} To
+               {{ Holiday.endDate | date: "dd/MM/yyyy" }}
+             </li>
+           </ul>
+         </div>
+       </div>
+     </div>
+     <div class="col">
+       <div class="card mt-5 shadow magic-card">
+         <div class="card-body birthday-card">
+           <h5 class="card-title">
+             Birthday <i class="fas fa-birthday-cake ms-2"></i>
+           </h5>
+           <ul class="list-group" *ngFor="let birthday of birthdayList">
+             <li class="list-group-item magic-list">
+               <i class="fas fa-birthday-cake"></i>&nbsp;
+               <b>{{ birthday.subject }}</b>, &nbsp;
+               {{ birthday.description }}, &nbsp;
+               {{ birthday.startDate | date: "dd/MM/yyyy" }}
+             </li>
+           </ul>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ 

@@ -71,3 +71,6 @@ td {
   width: 300px;
   overflow-y: auto;
 }
+table{
+  --bs-table-striped-bg: rgba(255, 255, 255, 0.05) !important;
+}

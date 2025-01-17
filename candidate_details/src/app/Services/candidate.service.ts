@@ -46,7 +46,7 @@ export class CandidateService {
       .set('SearchField', SearchField)
       .set('SearchValue', SearchValue);
 
-    this.http.get(`${this.baseUrl}GetCandidates`, { params }).subscribe({
+    this.http.get(`${this.baseUrl}Candidate/GetCandidates`, { params }).subscribe({
       next: (data: any) => {
         this.candidateListSubject.next(data.data);
         this.totalCandidatesSubject.next(data.totalCount);
@@ -59,15 +59,15 @@ export class CandidateService {
   }
 
   UploadExcel(excel: FormData) {
-    return this.http.post(`${this.baseUrl}AddCandidatesFromExcel`, excel);
+    return this.http.post(`${this.baseUrl}Candidate/AddCandidatesFromExcel`, excel);
   }
 
   getRoles() {
-    return this.http.get(`${this.baseUrl}GetRoles`);
+    return this.http.get(`${this.baseUrl}Candidate/GetRoles`);
   }
 
   AddUpdateRole(role: Roles) {
-    return this.http.post(`${this.baseUrl}CreateEditRole`, role);
+    return this.http.post(`${this.baseUrl}Candidate/CreateEditRole`, role);
   }
 
   confirmDelete() {
@@ -82,29 +82,29 @@ export class CandidateService {
   }
 
   DeleteRole(roleId: number) {
-    return this.http.delete(`${this.baseUrl}DeleteRole/${roleId}`);
+    return this.http.delete(`${this.baseUrl}Candidate/DeleteRole/${roleId}`);
   }
 
   AddEditCandidate(data: FormData) {
     this.isCandidateAddOrUpdate = true;
-    return this.http.post(`${this.baseUrl}AddEditCandidate`, data);
+    return this.http.post(`${this.baseUrl}Candidate/AddEditCandidate`, data);
   }
 
   deleteCandidate(id: number) {
-    return this.http.delete(`${this.baseUrl}DeleteCandidate/${id}`);
+    return this.http.delete(`${this.baseUrl}Candidate/DeleteCandidate/${id}`);
   }
 
   downloadCV(candidateId: number) {
-    const url = `${this.baseUrl}DownloadCV/${candidateId}`;
+    const url = `${this.baseUrl}Candidate/DownloadCV/${candidateId}`;
     return this.http.get(url, { responseType: 'blob' });
   }
 
   downloadExcel() {
-    const url = `${this.baseUrl}DownloadExcel`;
+    const url = `${this.baseUrl}Candidate/DownloadExcel`;
     return this.http.get(url, { responseType: 'blob' });
   }
 
   GetCandidate(candidateId: number) {
-    return this.http.get(`${this.baseUrl}GetCandidate/${candidateId}`);
+    return this.http.get(`${this.baseUrl}Candidate/GetCandidate/${candidateId}`);
   }
 }
