@@ -1,12 +1,18 @@
-<div class="container mt-3">
-  <!-- Trigger Button -->
-  <a class="btn btn-primary" (click)="onAdd()">Add Event</a>
-  <a class="btn btn-success float-end" routerLink="/eventList">Events</a>
-  <full-calendar
-    #calendar
-    [options]="calendarOptions"
-    class="pb-5 pt-2"
-  ></full-calendar>
+<div *ngIf="showCalendar">
+  <div class="container mt-3">
+    <!-- Trigger Button -->
+    <a class="btn btn-primary" (click)="onAdd()"
+      ><i class="fa-solid fa-plus me-2"></i>Add Event</a
+    >
+    <a class="btn btn-success float-end" (click)="ShowEventList()"
+      ><i class="fa-regular fa-calendar me-2"></i>Events</a
+    >
+    <full-calendar
+      #calendar
+      [options]="calendarOptions"
+      class="pb-5 pt-2"
+    ></full-calendar>
+  </div>
 </div>
 
 <!-- Modal -->
@@ -151,7 +157,12 @@
             aria-label="Close"
             (click)="modal.dismiss('Cross click')"
           >
-            Save Event
+          <i class="fa-solid fa-check-double me-2"></i>Save Event</button
+          ><button
+            type="reset"
+            class="btn btn-danger ms-5 shadow-sm hover-raise"
+          >
+            <i class="fa-solid fa-arrows-rotate me-2"></i> Reset
           </button>
         </div>
       </div>
@@ -197,7 +208,7 @@
                 class="btn btn-primary"
                 (click)="editcalendar(fullcalendar)"
               >
-                Edit
+                <i class="fas fa-edit me-2"></i>Edit
               </button>
               <button
                 class="btn btn-danger ms-3"
@@ -205,7 +216,7 @@
                 (click)="modal.dismiss('Cross click')"
                 (click)="DeleteCalendar(fullcalendar.calId)"
               >
-                Delete
+                <i class="fa fa-trash me-2"></i> Delete
               </button>
             </div>
           </div>
@@ -214,3 +225,92 @@
     </section>
   </div>
 </ng-template>
+
+<div *ngIf="!showCalendar">
+  <div class="container">
+    <a
+      class="btn btn-success shadow-sm border rounded-pill hover-raise"
+      (click)="ShowCalendar()"
+    >
+      <i class="fa-solid fa-calendar-days me-1"></i>Calendar
+    </a>
+    <div class="row">
+      <div class="col">
+        <div class="card mt-2 shadow magic-card">
+          <div class="card-body holiday-card">
+            <h5 class="card-title">
+              Company Holidays <i class="fa-solid fa-mug-hot ms-2"></i>
+            </h5>
+            <ul class="list-group" *ngFor="let Holiday of holidayList">
+              <li class="list-group-item magic-list">
+                <div class="row">
+                  <div class="col-5">
+                    <b
+                      ><img
+                        class="holiday-icon"
+                        src="assets/icon/Sun-Board-Holiday-Icon.png"
+                      />{{ Holiday.subject }} holiday</b
+                    >
+                  </div>
+                  <div class="col-5">
+                    {{ Holiday.startDate | date : "dd/MM/yyyy" }} To
+                    {{ Holiday.endDate | date : "dd/MM/yyyy" }}
+                  </div>
+                  <div class="col-2">
+                    <span class="float-end"
+                      ><i
+                        class="fas fa-edit text-primary me-3 hover-scale"
+                        (click)="editcalendar(Holiday)"
+                      ></i
+                      ><i
+                        class="fa fa-trash text-danger hover-scale"
+                        (click)="DeleteCalendar(Holiday.calId)"
+                      ></i
+                    ></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mt-2 shadow magic-card">
+          <div class="card-body birthday-card">
+            <h5 class="card-title">
+              Birthday <i class="fas fa-birthday-cake ms-2"></i>
+            </h5>
+            <ul class="list-group" *ngFor="let birthday of birthdayList">
+              <li class="list-group-item magic-list">
+                <div class="row">
+                  <div class="col-5">
+                    <img
+                      class="holiday-icon"
+                      src="assets/icon/birthday-cake-line-icon.png"
+                    />
+                    <b>{{ birthday.subject }}</b>
+                  </div>
+                  <div class="col-5">
+                    {{ birthday.startDate | date : "dd/MM/yyyy" }}
+                  </div>
+                  <div class="col-2">
+                    <span class="float-end">
+                      <i
+                        class="fas fa-edit text-primary me-3 hover-scale"
+                        (click)="editcalendar(birthday)"
+                      ></i>
+                      <i
+                        class="fa fa-trash text-danger hover-scale"
+                        (click)="DeleteCalendar(birthday.calId)"
+                      ></i
+                    ></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

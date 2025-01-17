@@ -33,7 +33,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-calendar',
-  imports: [FullCalendarModule, ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [FullCalendarModule, ReactiveFormsModule, CommonModule],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css',
 })
@@ -46,12 +46,12 @@ export class CalendarComponent implements OnInit {
   editcalendarVar: Calendar = new Calendar();
   service = inject(CalendarService);
   candidateService = inject(CandidateService);
-  @ViewChild('addAppointmentModal', { static: false })
-  addAppointmentModal!: ElementRef;
   submitted = false;
   closeResult = '';
   private baseUrl = environment.apiURL;
   isNgTemplateHide = false;
+  showCalendar = true;
+  isDetailClicked = false;
 
   // for appointment address
   onSubmitForm: FormGroup = new FormGroup(
@@ -92,6 +92,7 @@ export class CalendarComponent implements OnInit {
 
   constructor(private http: HttpClient, private modalService: NgbModal) {
     this.fullcalendar = new Calendar();
+    this.getEventList();
   }
 
   onAdd() {
@@ -114,15 +115,8 @@ export class CalendarComponent implements OnInit {
           if (res) {
             this.fullcalendar = new Calendar();
             this.isNgTemplateHide = true;
-            this.calendarOptions = {
-              initialView: 'dayGridMonth',
-              plugins: [dayGridPlugin, interactionPlugin],
-              editable: true,
-              events: this.fetchEvents.bind(this), // Binding `fetchEvents` for event fetching
-              eventDrop: this.handleEventDrop.bind(this), // Handle event drop
-              eventResize: this.handleEventResize.bind(this), // Handle event resize
-              eventClick: this.handleEventClick.bind(this), // Handle event click
-            };
+            this.getEventList(); // Refresh the lists after deletion
+            this.updateCalendarOptions(); // Update the calendar options
             this.onSubmitForm.reset();
           } else {
             Swal.fire({
@@ -176,16 +170,11 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.showCalendar = true;
+    this.isDetailClicked = false;
     // load all event when page load
-    this.calendarOptions = {
-      initialView: 'dayGridMonth',
-      plugins: [dayGridPlugin, interactionPlugin],
-      editable: true,
-      events: this.fetchEvents.bind(this), // Binding `fetchEvents` for event fetching
-      eventDrop: this.handleEventDrop.bind(this), // Handle event drop
-      eventResize: this.handleEventResize.bind(this), // Handle event resize
-      eventClick: this.handleEventClick.bind(this), // Handle event click
-    };
+
+    this.updateCalendarOptions(); // Update the calendar options
   }
 
   // Method to fetch events from the backend
@@ -269,7 +258,8 @@ export class CalendarComponent implements OnInit {
   // Handle event click
   handleEventClick(clickInfo: { event: { id: any } }): void {
     const eventId = clickInfo.event.id;
-    debugger;
+    this.isDetailClicked = true;
+
     this.http
       .get(`${this.baseUrl}Calendar/GetCalendarDetails/${eventId}`)
       .subscribe(
@@ -278,7 +268,7 @@ export class CalendarComponent implements OnInit {
 
           this.fullcalendar = data;
 
-          const modalElement = this.addAppointmentModal?.nativeElement;
+          const modalElement = this.calendarModel?.nativeElement;
           this.modalPopupAndMsg = 'Event Details';
           this.open(this.calendarModel);
         },
@@ -303,6 +293,7 @@ export class CalendarComponent implements OnInit {
 
   // edit calendar
   editcalendar(calendar: Calendar) {
+    debugger;
     this.editcalendarVar = calendar;
     this.onSubmitForm.patchValue({
       calId: calendar.calId,
@@ -314,29 +305,60 @@ export class CalendarComponent implements OnInit {
     });
     this.fullcalendar = calendar;
     this.modalPopupAndMsg = 'Edit Event';
-    const modalElement = this.addAppointmentModal?.nativeElement;
 
-    if (modalElement) {
+    if (!this.isDetailClicked) {
       this.open(this.calendarModel);
     }
+    this.isDetailClicked = false;
   }
   // Delete calendar by id
   DeleteCalendar(Id: any) {
     this.candidateService.confirmDelete().then((result) => {
+      this.getEventList();
       if (result.isConfirmed) {
-        this.service.successDelete(Id).subscribe(() => {
-          this.calendarOptions = {
-            initialView: 'dayGridMonth',
-            plugins: [dayGridPlugin, interactionPlugin],
-            editable: true,
-            events: this.fetchEvents.bind(this), // Binding `fetchEvents` for event fetching
-            eventDrop: this.handleEventDrop.bind(this), // Handle event drop
-            eventResize: this.handleEventResize.bind(this), // Handle event resize
-            eventClick: this.handleEventClick.bind(this), // Handle event click
-          };
+        this.service.successDelete(Id).subscribe({
+          next: () => {
+            this.getEventList(); // Refresh the lists after deletion
+            this.updateCalendarOptions(); // Update the calendar options
+          },
+          error: (err) => {
+            console.error('Error deleting calendar:', err);
+          },
         });
       }
     });
   }
-  
+
+  updateCalendarOptions() {
+    this.calendarOptions = {
+      initialView: 'dayGridMonth',
+      plugins: [dayGridPlugin, interactionPlugin],
+      editable: true,
+      events: this.fetchEvents.bind(this), // Binding `fetchEvents` for event fetching
+      eventDrop: this.handleEventDrop.bind(this), // Handle event drop
+      eventResize: this.handleEventResize.bind(this), // Handle event resize
+      eventClick: this.handleEventClick.bind(this), // Handle event click
+    };
+  }
+
+  // Event list
+
+  birthdayList: Calendar[] = [];
+  holidayList: Calendar[] = [];
+  getEventList() {
+    this.service.getEventList().subscribe((res: any) => {
+      if (res.bd) {
+        this.birthdayList = res.bd;
+        this.holidayList = res.hd;
+      }
+    });
+  }
+
+  ShowEventList() {
+    this.showCalendar = false;
+  }
+
+  ShowCalendar() {
+    this.showCalendar = true;
+  }
 }

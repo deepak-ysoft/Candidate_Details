@@ -28,3 +28,26 @@ body {
    padding: 10px !important; /* Optional: Adjust padding */
    border-radius: 5px !important; /* Optional: Rounded corners */
 }
+.btn-success {
+   background-color: rgb(143, 238, 11);
+   border-color: rgb(143, 238, 11);
+   color: darkblue;
+}
+
+.btn-success:hover {
+   background-color: #218838;
+   border-color: #1e7e34;
+}
+.btn-primary {
+   background-color: #3ac7ff;
+   border-color: #3ac7ff;
+   color: darkblue;
+}
+
+.btn-primary:hover {
+   background-color: #008ac0;
+   border-color: #008ac0;
+}
+.btn {
+   border-radius: 25px !important;
+}
