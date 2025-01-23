@@ -4,6 +4,7 @@ import { RolesComponent } from './Components/roles/roles.component';
 import { LayoutComponent } from './Components/layout/layout/layout.component';
 import { CalendarComponent } from './Components/calendar/calendar.component';
 import { EmployeesComponent } from './Components/Employee/employees/employees.component';
+import { EmployeeDetailsComponent } from './Components/Employee/employee-details/employee-details.component';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,7 @@ export const routes: Routes = [
       { path: 'roles', component: RolesComponent },
       { path: 'calendar', component: CalendarComponent },
       { path: 'employees', component: EmployeesComponent },
+      { path: 'employee-details', component: EmployeeDetailsComponent },
     ],
   },
 ];

@@ -34,7 +34,7 @@ export class CandidateService {
     page: number = 1,
     pageSize: number = 10,
     sortColumn: string = 'id',
-    sortDirection: string = 'asc',
+    sortDirection: string = 'desc',
     SearchField: string = '',
     SearchValue: string = ''
   ): void {
@@ -46,20 +46,29 @@ export class CandidateService {
       .set('SearchField', SearchField)
       .set('SearchValue', SearchValue);
 
-    this.http.get(`${this.baseUrl}Candidate/GetCandidates`, { params }).subscribe({
-      next: (data: any) => {
-        this.candidateListSubject.next(data.data);
-        this.totalCandidatesSubject.next(data.totalCount);
-        this.totalPagesSubject.next(Math.ceil(data.totalCount / pageSize));
-      },
-      error: (error) => {
-       // console.error('Error fetching candidates:', error);
-      },
-    });
+    this.http
+      .get(`${this.baseUrl}Candidate/GetCandidates`, { params })
+      .subscribe({
+        next: (data: any) => {
+          this.candidateListSubject.next(data.data);
+          this.totalCandidatesSubject.next(data.totalCount);
+          this.totalPagesSubject.next(Math.ceil(data.totalCount / pageSize));
+        },
+        error: (error) => {
+          // console.error('Error fetching candidates:', error);
+        },
+      });
   }
 
   UploadExcel(excel: FormData) {
-    return this.http.post(`${this.baseUrl}Candidate/AddCandidatesFromExcel`, excel);
+    return this.http.post(
+      `${this.baseUrl}Candidate/AddCandidatesFromExcel`,
+      excel
+    );
+  }
+
+  uploadCV(cv: FormData) {
+    return this.http.post(`${this.baseUrl}Resume/UploadResume`, cv);
   }
 
   getRoles() {
@@ -105,6 +114,8 @@ export class CandidateService {
   }
 
   GetCandidate(candidateId: number) {
-    return this.http.get(`${this.baseUrl}Candidate/GetCandidate/${candidateId}`);
+    return this.http.get(
+      `${this.baseUrl}Candidate/GetCandidate/${candidateId}`
+    );
   }
 }

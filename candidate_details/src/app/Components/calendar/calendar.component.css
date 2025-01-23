@@ -38,10 +38,6 @@
       transform 0.3s,
       box-shadow 0.3s;
 }
-.hover-raise:hover {
-   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-   transform: translateY(-2px);
-}
 
 .magic-list:hover {
    transform: scale(1.05);
@@ -92,4 +88,8 @@
    width: 19px;
    margin-right: 10px;
    padding-bottom: 3px;
+}
+
+.modal-header {
+   background-color: rgb(217, 246, 246);
 }

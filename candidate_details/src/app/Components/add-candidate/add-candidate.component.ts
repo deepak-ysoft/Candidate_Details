@@ -118,10 +118,25 @@ export class AddCandidateComponent implements OnInit {
   }
   // when user click on change password
   onFileChange(event: any): void {
+    debugger;
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       this.selectedFile = file;
     }
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+    this.candidateServices.uploadCV(formData).subscribe((res: any) => {
+      if (res.success) {
+        console.log('CV data...', res.data);
+        this.candidateForm.patchValue({
+          name: res.data.name,
+          email_ID: res.data.email,
+          experience: res.data.experience,
+          contact_No: res.data.phone,
+          skills: res.data.skills,
+        });
+      }
+    });
   }
 
   getRoles() {

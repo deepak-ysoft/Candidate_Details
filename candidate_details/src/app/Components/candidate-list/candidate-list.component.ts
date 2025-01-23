@@ -34,7 +34,7 @@ export class CandidateListComponent {
   isCVAvailable = false; // Set to true if CV exists for the candidate
   sortColumn: string = 'id';
   isSort = false;
-  sortDirection: string = 'asc';
+  sortDirection: string = 'desc';
   PageNumber: number = 1;
   pageSize: number = 10;
   searchTerms: string = '';
@@ -51,6 +51,7 @@ export class CandidateListComponent {
   firstCandidateOfPage = 1;
   lastCandidateOfPage = 10;
   excelFileUpload: File | null = null;
+  CandidateModalHeader = 'Add Candidate';
 
   constructor(
     private candidateService: CandidateService,
@@ -103,7 +104,7 @@ export class CandidateListComponent {
           title: 'Done!',
           text: 'Excel file successfully uploaded.',
           icon: 'success',
-          timer: 2000, // Auto-close after 3 seconds
+          timer: 2000, // Auto-close after 2 seconds
           timerProgressBar: true,
         });
       } else {
@@ -172,6 +173,7 @@ export class CandidateListComponent {
   addClicked = false;
   openAccCandidateModel() {
     this.addClicked = true;
+    this.CandidateModalHeader = 'Add Candidate';
     setTimeout(() => {
       this.addClicked = false;
     }, 0);
@@ -181,7 +183,7 @@ export class CandidateListComponent {
 
   EditCandidate(candidate: Candidate) {
     this.clickedCandidateForEdit = candidate; // Set the selected candidate
-
+    this.CandidateModalHeader = 'Edit Candidate';
     // Open the modal after data binding
     this.open(this.addCandidate);
   }
@@ -283,7 +285,7 @@ export class CandidateListComponent {
         window.URL.revokeObjectURL(url);
       },
       error: (err) => {
-     //   console.error(err);
+        //   console.error(err);
         alert('Error downloading CV.');
       },
     });

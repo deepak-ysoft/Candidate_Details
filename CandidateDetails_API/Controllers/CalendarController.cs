@@ -47,6 +47,7 @@ namespace CandidateDetails_API.Controllers
             }
         }
 
+
         /// <summary>
         /// Get Calendar List 
         /// </summary>
@@ -58,8 +59,8 @@ namespace CandidateDetails_API.Controllers
             {
                 Regex trimmer = new Regex(@"\s\s+");
                 // Retrieve the calendar from the database
-                var hdayDescription = await _context.calendar.Where(x => x.Description.ToLower().Trim() == "holiday"|| x.Description.ToLower().Trim() == "company holiday").ToListAsync();
-                var bdayDescription = await _context.calendar.Where(x => x.Description.ToLower().Trim() == "birthday").ToListAsync();
+                var hdayDescription = await _context.calendar.Where(x => x.Subject.Trim() == "Company Holiday").OrderBy(x => x.StartDate).ToListAsync();
+                var bdayDescription = await _context.calendar.Where(x => x.Subject.Trim() == "Birthday").OrderBy(x => x.StartDate).ToListAsync();
 
                 // Return the calendar as JSON
                 return Ok(new { hd = hdayDescription, bd = bdayDescription });
@@ -127,12 +128,19 @@ namespace CandidateDetails_API.Controllers
         [HttpGet("GetCalendarDetails/{id}")]
         public async Task<IActionResult> GetCalendarDetails(int id)
         {
+            var leave = await _context.employeeLeaveVM.FirstOrDefaultAsync(x => x.calId == id);
+            var birth = await _context.employeeBirthdays.FirstOrDefaultAsync(x => x.calId == id);
+            bool isUsed = false;
+            if (leave != null || birth != null)
+            {
+                isUsed = true;
+            }
             var calendar = await _service.getCalendarByIdAsync(id);
             if (calendar == null)
             {
                 return NotFound(); // Handle the case when the calendar doesn't exist
             }
-            return Ok(calendar);
+            return Ok(new { data = calendar, isUsed = isUsed });
         }
 
         /// <summary>
@@ -148,7 +156,7 @@ namespace CandidateDetails_API.Controllers
             {
                 //calendar.StartDate = request.NewStart.AddHours(5).AddMinutes(30);
                 //calendar.EndDate = request.NewEnd.AddHours(5).AddMinutes(30); 
-                
+
                 calendar.StartDate = request.NewStart;
                 calendar.EndDate = request.NewEnd;
 

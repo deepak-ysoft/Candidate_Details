@@ -49,17 +49,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-.btn {
-  transition:
-    box-shadow 0.3s ease,
-    transform 0.3s ease;
-}
-
-.hover-raise:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
-}
-
 .form-control {
   border: 2px solid #ced4da;
   border-radius: 8px;

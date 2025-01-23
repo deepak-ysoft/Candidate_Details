@@ -52,6 +52,7 @@ export class CalendarComponent implements OnInit {
   isNgTemplateHide = false;
   showCalendar = true;
   isDetailClicked = false;
+  isUsed = false;
 
   // for appointment address
   onSubmitForm: FormGroup = new FormGroup(
@@ -203,7 +204,7 @@ export class CalendarComponent implements OnInit {
         successCallback(events);
       },
       (error) => {
-       // console.error('Error loading events', error);
+        // console.error('Error loading events', error);
         failureCallback(error);
       }
     );
@@ -214,7 +215,9 @@ export class CalendarComponent implements OnInit {
     const event = eventDropInfo.event;
     const eventId = event.id || Math.random().toString(36).substring(2, 9);
     const newStart = format(event.start, "yyyy-MM-dd'T'HH:mm:ssxxx");
-    const newEnd = event.end ? format(event.end, "yyyy-MM-dd'T'HH:mm:ssxxx") : newStart;
+    const newEnd = event.end
+      ? format(event.end, "yyyy-MM-dd'T'HH:mm:ssxxx")
+      : newStart;
 
     const payload = {
       id: eventId,
@@ -225,7 +228,7 @@ export class CalendarComponent implements OnInit {
     this.service.updateCalendar(eventId, newStart, newEnd).subscribe({
       next: (response) => {},
       error: (error) => {
-       // console.error('Error updating event', error);
+        // console.error('Error updating event', error);
         eventDropInfo.revert(); // Revert the changes if failed
       },
       complete: () => {},
@@ -246,7 +249,7 @@ export class CalendarComponent implements OnInit {
       .subscribe(
         (response) => {},
         (error) => {
-         // console.error('Error resizing event', error);
+          // console.error('Error resizing event', error);
           eventResizeInfo.revert(); // Revert changes if failed
         }
       );
@@ -263,9 +266,9 @@ export class CalendarComponent implements OnInit {
         (data: any) => {
           // Show appointment details (can integrate with a modal)
 
-          this.fullcalendar = data;
+          this.fullcalendar = data.data;
+          this.isUsed = data.isUsed;
 
-          const modalElement = this.calendarModel?.nativeElement;
           this.modalPopupAndMsg = 'Event Details';
           this.open(this.calendarModel);
         },

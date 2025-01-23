@@ -12,6 +12,10 @@
   padding: 0.5rem 0;
 }
 
+.magical-table * {
+  border-bottom: 1px solid #c2d3d9 !important;
+}
+
 .card-footer {
   background-color: #f8f9fa;
 }
@@ -24,7 +28,6 @@ td {
   align-content: center;
   text-align: center;
 }
-
 .cursorPointer {
   cursor: pointer !important;
 }
@@ -49,7 +52,7 @@ td {
 .ellipsis-cell {
   width: 5%;
   min-width: 5%;
-  max-width: 330px;
+  max-width: 280px;
   overflow: hidden; /* Hides content that overflows */
   text-overflow: ellipsis; /* Adds ellipsis for overflow */
   white-space: nowrap; /* Prevents wrapping to the next line */
@@ -71,6 +74,6 @@ td {
   width: 300px;
   overflow-y: auto;
 }
-table{
+table {
   --bs-table-striped-bg: rgba(255, 255, 255, 0.05) !important;
 }
