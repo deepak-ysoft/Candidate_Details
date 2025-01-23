@@ -60,10 +60,11 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 app.UseCors("AllowAll");
+app.UseStaticFiles(); // General static files
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-    Path.Combine(builder.Environment.ContentRootPath, "uploads")),
+        Path.Combine(builder.Environment.ContentRootPath, "uploads")),
     RequestPath = "/uploads"
 });
 // Configure the HTTP request pipeline.
