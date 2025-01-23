@@ -60,6 +60,14 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 app.UseCors("AllowAll");
+if (!Directory.Exists(Path.Combine(builder.Environment.ContentRootPath, "uploads")))
+{
+    Directory.CreateDirectory(Path.Combine(builder.Environment.ContentRootPath, "uploads"));
+}
+if (!Directory.Exists(Path.Combine(builder.Environment.ContentRootPath, "CandidateCV")))
+{
+    Directory.CreateDirectory(Path.Combine(builder.Environment.ContentRootPath, "CandidateCV"));
+}
 app.UseStaticFiles(); // General static files
 app.UseStaticFiles(new StaticFileOptions
 {
